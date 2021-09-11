@@ -1,0 +1,6 @@
+{
+  "extends": ["plugin:cypress/recommended"],
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  }
+}
