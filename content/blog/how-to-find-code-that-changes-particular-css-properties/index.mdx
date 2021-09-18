@@ -1,0 +1,25 @@
+---
+title: 'How to find code that changes particular CSS properties'
+slug: 'how-to-find-code-that-changes-particular-css-properties'
+date: '2020-08-24'
+categories:
+  - 'javascript'
+tags:
+  - 'javascript'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+You can use JavaScript to manipulate the styling of elements. Changing the visibility, transforming the element, etc.
+
+Sometimes you need to debug styling on a site that has many JavaScript files included. How can you find that particular line of code?
+
+**You need to instruct Google Chrome to pause the debugger when the CSS properties change**.
+
+### Locate the element to inspect
+
+Open the Elements panel and locate the element you want to inspect.
+
+### Break on attribute modifications
+
+Right-click on the element. From the context menu, choose Break on > attribute modifications.

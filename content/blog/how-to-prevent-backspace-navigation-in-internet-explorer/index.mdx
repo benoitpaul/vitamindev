@@ -1,0 +1,47 @@
+---
+title: 'How to prevent BACKSPACE navigation in Internet Explorer'
+slug: 'how-to-prevent-backspace-navigation-in-internet-explorer'
+date: '2020-07-27'
+categories:
+  - 'angular'
+tags:
+  - 'angular'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+In angular, you can prevent the BACKSPACE navigation to the previous page in IE, by using a HostListener that will intercept the `keydown` event, and prevent the default behavior.
+
+Use this snippet of code in your application:
+
+```typescript
+@HostListener('document:keydown', ['$event'])
+onKeyDown(evt: KeyboardEvent) {
+  if (evt.key === 'Backspace') {
+    let doPrevent = true;
+    const target = evt.target as HTMLInputElement;
+    const disabled = target.disabled || target.readOnly;
+    if (!disabled) {
+      if (target.isContentEditable) {
+        doPrevent = false;
+      }
+
+      const whitelist = ['INPUT', 'TEXTAREA', 'SELECT'];
+
+      const nodeName = target.nodeName.toLocaleUpperCase();
+      if (whitelist.indexOf(nodeName) > -1) {
+        doPrevent = false;
+      }
+    }
+
+    if (doPrevent) {
+      evt.preventDefault();
+      return false;
+    }
+  }
+}
+```
+
+[StackBlitz demo](https://stackblitz.com/github/vitamindev/angular-prevent-backspace-navigation-ie)
+
+There is no need for this in Chrome: since release 52 [Chrome blocks the BACKSPACE navigation](https://www.ghacks.net/2016/05/21/chrome-52-blocks-backspace-back-navigation/).

@@ -1,0 +1,23 @@
+---
+title: 'How to fix Docker error: denied: requested access to the resource is denied'
+slug: 'how-to-fix-docker-error-denied-requested-access-to-the-resource-is-denied'
+date: '2021-07-27'
+categories:
+  - 'devops'
+tags:
+  - 'devops'
+  - 'docker'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+If you try to push your Docker image to DockerHub, you may encounter this error:  
+`denied: requested access to the resource is denied`
+
+It's that's the case you probably just need to log in to docker before pushing the image:
+
+```bash
+docker login
+docker build -t YOUR_DOCKER_NAME/YOUR_DOCKER_IMAGE .
+docker push YOUR_DOCKER_NAME/YOUR_DOCKER_IMAGE
+```

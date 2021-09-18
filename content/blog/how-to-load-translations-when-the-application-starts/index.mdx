@@ -1,0 +1,36 @@
+---
+title: 'How to load translations when the application starts'
+date: '2020-07-27'
+slug: 'how-to-load-translations-when-the-application-starts'
+categories:
+  - 'angular'
+tags:
+  - 'angular'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+In ngx-translate, if you want to safely use `.instant()`, you need to make sure the translations are loaded first. While [instant is synchronous, the default translation file loader is asynchronous](https://github.com/ngx-translate/core#methods).
+
+You can load the translations when the application starts via `.use()` in the ngOnInit of your AppComponent.
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent implements OnInit {
+  stringInCode: string;
+
+  constructor(private translate: TranslateService) {}
+
+  async ngOnInit() {
+    await this.translate.use('en').toPromise();
+    this.stringInCode = this.translate.instant('TEXT');
+  }
+}
+```

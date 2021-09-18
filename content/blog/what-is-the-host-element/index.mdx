@@ -1,0 +1,44 @@
+---
+title: 'What is the Host element?'
+slug: 'what-is-the-host-element'
+date: '2020-07-27'
+categories:
+  - 'angular'
+tags:
+  - 'angular'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+In angular, the host element is a concept that can be applied to directives or components.
+
+## Directive
+
+The host element of a directive is the element the directive is attached to.
+
+```markup
+<p my-directive>text<p>
+```
+
+In the example above, the `<p>` element is the host element of the `my-directive` directive.
+
+Component
+
+The host element of a component is the selector element of the component.
+
+```typescript
+@Component({
+  selector: 'app-test',
+  templateUrl: './test.component.html',
+  styleUrls: ['./test.component.css'],
+})
+export class TestComponent {
+  constructor() {}
+}
+```
+
+```markup
+<app-test></app-test>
+```
+
+In the example above, the `<app-test>` element is the host element.

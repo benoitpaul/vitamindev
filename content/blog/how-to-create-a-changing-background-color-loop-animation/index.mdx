@@ -1,0 +1,97 @@
+---
+title: 'How to create a changing background color loop animation'
+slug: 'how-to-create-a-changing-background-color-loop-animation'
+date: '2020-08-25'
+categories:
+  - 'css'
+tags:
+  - 'css'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+In this tutorial, we'll learn how to create a changing background loop animation.
+
+## Define a color scheme
+
+The first step is to define the color scheme to loop. For this tutorial, I'll be using a rainbow color scheme.
+
+#ff0000
+
+#ffa500
+
+#ffff00
+
+#008000
+
+#0000ff
+
+#4b0082
+
+#ee82ee
+
+## Implement the color change loop
+
+Animations have a beginning and an end. They start at 0% and finish at 100%. You can define a state of the animation at any step and let CSS handle the transition between each one of them. Each step is called a _keyframe_.
+
+Since we want each color to last an equal time, we'll define the keyframes of the animation so that each color has its own keyframe.
+
+Since we have 7 colors to loop through, we assign a keyframe for each of them.
+
+```css
+@keyframes colorchange {
+  0% {
+    background: #ff0000;
+  }
+  14% {
+    background: #ffa500;
+  }
+  28% {
+    background: #ffff00;
+  }
+  42% {
+    background: #008000;
+  }
+  56% {
+    background: #0000ff;
+  }
+  70% {
+    background: #4b0082;
+  }
+  84% {
+    background: #ee82ee;
+  }
+  100% {
+    background: #ff0000;
+  }
+}
+```
+
+## Define the animation
+
+Next let's create a class with an animation!
+
+1. `animation: colorchange 45s;` Defines an animation with the keyframes we've set up previously. The whole animation (from 0% to 100%) will last 45 seconds.
+2. `animation-timing-function: ease-in-out;` The animation has both a slow start and a slow end. You can find the complete list of timing functions [here](http://The animation has both a slow start and a slow end).
+3. `animation-iteration-count: infinite;` The animation will loop indefinitely.
+4. `animation-play-state: running;` Starts the animation right away
+
+```css
+.rainbow {
+  animation: colorchange 45s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+}
+```
+
+## Create the HTML element to animate
+
+Let's create a simple div to animate.
+
+```markup
+<div class="rainbow" style="height:200px;width:200px;">
+</div>
+```
+
+You can view the [CodePen demo here](https://codepen.io/vitamindev-the-scripter/pen/YzqZNpP).

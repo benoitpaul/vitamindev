@@ -1,0 +1,73 @@
+---
+title: 'How to use enum in HTML?'
+slug: 'how-to-use-enum-in-html'
+date: '2020-08-02'
+categories:
+  - 'angular'
+tags:
+  - 'angular'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+Sometimes you want to use an enum in the HTML template of an angular component.
+
+Let's say you have an OrderStatus enum and you want to show or hide elements based on whether the order status.
+
+```typescript
+export enum OrderStatus {
+  Ordered,
+  Processed,
+  Shipped,
+  Delivered,
+}
+```
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { OrderStatus } from '../order-status.enum';
+
+@Component({
+  selector: 'app-order-process',
+  templateUrl: './order-process.component.html',
+  styleUrls: ['./order-process.component.css'],
+})
+export class OrderProcessComponent {
+  status = OrderStatus.Ordered;
+
+  constructor() {}
+}
+```
+
+```markup
+<div *ngIf="orderStatus === OrderStatus.Ordered">
+    Ordered
+</div>
+```
+
+The code above will not compile:
+
+error TS2339: Property 'OrderStatus' does not exist on type 'OrderProcessComponent'.
+
+The problem is that the scope of the template is limited to the component instance members.
+
+In order to get this to work, you need to defined a property in the component which value is the enum type.
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { OrderStatus } from '../order-status.enum';
+
+@Component({
+  selector: 'app-order-process',
+  templateUrl: './order-process.component.html',
+  styleUrls: ['./order-process.component.css'],
+})
+export class OrderProcessComponent {
+  // makes the OrderStatus enum available in the template
+  OrderStatus = OrderStatus;
+
+  status = OrderStatus.Ordered;
+
+  constructor() {}
+}
+```

@@ -1,0 +1,76 @@
+---
+title: 'Why is document.body null?'
+slug: 'why-is-document-body-null'
+date: '2020-08-20'
+categories:
+  - 'javascript'
+tags:
+  - 'javascript'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+If you get the error _Uncaught TypeError: Cannot read property 'appendChild' of null_ when using the `document.body` object, it is most likely because the body has not been defined yet.
+
+**If `document.body` is null, you most likely need to execute your code in the `window.onload` function.**
+
+Let's check this example:
+
+```markup
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript">
+    const p = document.createElement('p');
+    p.innerHTML = 'Lorem ipsum';
+    document.body.appendChild(p);
+  </script>
+  <title>Appending an element to body</title>
+</head>
+<body>
+    This is a text
+</body>
+</html>
+```
+
+Since the JavaScript code is executed _before_ the HTML body tag has loaded, `document.body` is null.
+
+Executing the code inside the `window.load` function fixes the problem:
+
+```markup
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript">
+    window.onload = () => {
+        const p = document.createElement('p');
+        p.innerHTML = 'Lorem ipsum';
+        document.body.appendChild(p);
+    }
+  </script>
+  <title>Appending an element to body</title>
+</head>
+<body>
+    This is a text
+</body>
+</html>
+```
+
+Another option is to move the script at the end of the body tag, once it's been loaded:
+
+```javascript
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Appending an element to body</title>
+</head>
+<body>
+    This is a text
+    <script type="text/javascript">
+        const p = document.createElement('p');
+        p.innerHTML = 'Lorem ipsum';
+        document.body.appendChild(p);
+      </script>
+</body>
+</html>
+```

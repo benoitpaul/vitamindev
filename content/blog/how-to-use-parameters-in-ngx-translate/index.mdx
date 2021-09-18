@@ -1,0 +1,68 @@
+---
+title: 'How to use parameters in ngx-translate'
+slug: 'how-to-use-parameters-in-ngx-translate'
+date: '2020-07-27'
+categories:
+  - 'angular'
+tags:
+  - 'angular'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+Create an entry in the translation file (assets/i18n/en.json). The string interpolation syntax {{}} is used to indicate a named parameter.
+
+```json
+{
+  "TEXT": "Hello {{value1}} and {{value2}}"
+}
+```
+
+You can pass parameters to the translation using four techniques:
+
+Method 1: In the template, using the translate pipe
+
+```markup
+{{ "TEXT" | translate: { value1: paramValue1, value2: paramValue2 } }}
+```
+
+Method 2: In the template, using the translate directive, with the key as an attribute
+
+```markup
+<p
+  [translate]="'TEXT'"
+  [translateParams]="{ value1: paramValue1, value2: paramValue2 }"
+></p>
+```
+
+Method 3: In the template, using the translate directive, with the key as the element content
+
+```markup
+<p
+  translate
+  [translateParams]="{ value1: paramValue1, value2: paramValue2 }"
+>
+  TEXT
+</p>
+```
+
+Method 4: In the code, using the instant API
+
+First translate the key in code:
+
+```typescript
+this.stringInCode = this.translate.instant('TEXT', {
+  value1: this.paramValue1,
+  value2: this.paramValue2,
+});
+```
+
+Then use the variable using string interpolation in your template:
+
+```markup
+<p>
+  {{ stringInCode }}
+</p>
+```
+
+[StackBlitz demo](https://stackblitz.com/github/vitamindev/ngx-translate-parameters)
