@@ -1,12 +1,12 @@
 const path = require('path');
 
 const createBlogPostPages = async ({ graphql, actions }) => {
-  const blogPostTemplate = path.resolve('./src/templates/post.tsx');
   const { errors, data } = await graphql(`
     {
       allBlogPost {
         nodes {
           slug
+          category
         }
       }
     }
@@ -16,16 +16,28 @@ const createBlogPostPages = async ({ graphql, actions }) => {
     throw new Error('There was an error');
   }
 
-  console.log('data:', data);
+  const categories = new Set();
+  const blogPostTemplate = path.resolve('./src/templates/Post.tsx');
   const blogPosts = data.allBlogPost.nodes;
-  console.log('blogPosts:', blogPosts);
   blogPosts.forEach((post, i) => {
-    console.log('creating page for: post.slug');
     actions.createPage({
-      path: post.slug,
+      path: `/${post.category}/${post.slug}/`,
       component: blogPostTemplate,
       context: {
         slug: post.slug,
+      },
+    });
+
+    categories.add(post.category);
+  });
+
+  const blogCategoryTemplate = path.resolve('./src/templates/Category.tsx');
+  Array.from(categories).forEach((category) => {
+    actions.createPage({
+      path: `/${category}/`,
+      component: blogCategoryTemplate,
+      context: {
+        category,
       },
     });
   });
@@ -43,6 +55,9 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         id: { type: `ID!` },
         title: { type: 'String!' },
         slug: { type: 'String!' },
+        description: { type: 'String!' },
+        category: { type: 'String!' },
+        tags: { type: '[String!]!' },
         authors: {
           type: '[Person!]!',
           resolve: (source, args, context, info) => {
@@ -98,7 +113,6 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 
 exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
   const { createNode, createParentChildLink } = actions;
-  console.log('node.internal.type: ', node.internal.type);
   if (node.internal.type === `Mdx`) {
     const parent = getNode(node.parent);
     const collection = parent.sourceInstanceName;
@@ -107,6 +121,9 @@ exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
       const mdxBlogPost = {
         title: node.frontmatter.title,
         slug: node.frontmatter.slug,
+        description: node.frontmatter.description,
+        category: node.frontmatter.category,
+        tags: node.frontmatter.tags,
         authors: node.frontmatter.authors,
         body: node.rawBody,
       };

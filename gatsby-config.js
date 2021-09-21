@@ -1,9 +1,9 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
-    siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
+    title: `Vitamin Dev`,
+    description: `Learn React, Angular 2+, Javascript and CSS with bite sized, no fluff posts.`,
+    author: `@benoitpaul`,
+    siteUrl: `https://vitamindev.com/`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -59,6 +59,12 @@ module.exports = {
               quality: 50,
               withWebp: true,
               withAvif: true,
+            },
+          },
+          {
+            resolve: `gatsby-remark-vscode`,
+            options: {
+              theme: 'Abyss',
             },
           },
         ],

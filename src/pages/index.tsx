@@ -3,8 +3,8 @@ import { Link } from 'gatsby';
 import { StaticImage } from 'gatsby-plugin-image';
 
 import styled from 'styled-components';
-import Layout from '../components/layout';
-import Seo from '../components/seo';
+import Layout from '../components/Layout';
+import Seo from '../components/Seo';
 
 const Container = styled.div`
   margin: 3rem auto;
