@@ -30,6 +30,7 @@ interface BlogPostTemplateProps {
 }
 
 const ArticleStyled = styled.article`
+  width: 100%;
   max-width: 42rem;
   margin-left: auto;
   margin-right: auto;

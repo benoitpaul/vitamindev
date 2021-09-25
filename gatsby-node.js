@@ -1,4 +1,5 @@
 const path = require('path');
+const { createRemoteFileNode } = require('gatsby-source-filesystem');
 
 const createBlogPostPages = async ({ graphql, actions }) => {
   const { errors, data } = await graphql(`
@@ -16,7 +17,6 @@ const createBlogPostPages = async ({ graphql, actions }) => {
     throw new Error('There was an error');
   }
 
-  const categories = new Set();
   const blogPostTemplate = path.resolve('./src/templates/Post.tsx');
   const blogPosts = data.allBlogPost.nodes;
   blogPosts.forEach((post, i) => {
@@ -27,23 +27,42 @@ const createBlogPostPages = async ({ graphql, actions }) => {
         slug: post.slug,
       },
     });
-
-    categories.add(post.category);
   });
+};
 
+const createCategoryPages = async ({ graphql, actions }) => {
+  const { errors, data } = await graphql(`
+    {
+      allCategory {
+        nodes {
+          slug
+        }
+      }
+    }
+  `);
+  if (errors) {
+    console.log(errors);
+    throw new Error('There was an error');
+  }
+  const categories = data.allCategory.nodes;
   const blogCategoryTemplate = path.resolve('./src/templates/Category.tsx');
-  Array.from(categories).forEach((category) => {
+  Array.from(categories).forEach(({ slug }) => {
     actions.createPage({
-      path: `/${category}/`,
+      path: `/${slug}/`,
       component: blogCategoryTemplate,
       context: {
-        category,
+        slug,
       },
     });
   });
 };
 
-exports.createPages = createBlogPostPages;
+const createPages = async ({ graphql, actions }) => {
+  await createBlogPostPages({ graphql, actions });
+  await createCategoryPages({ graphql, actions });
+};
+
+exports.createPages = createPages;
 // TODO: sourceNodes vs createSchemaCustomization
 exports.createSchemaCustomization = ({ actions, schema }) => {
   const { createTypes } = actions;
@@ -66,6 +85,31 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
               .filter((person) => source.authors.includes(person.email));
           },
         },
+        body: {
+          type: 'String!',
+          resolve(source, args, context, info) {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            const resolver = type.getFields()['body'].resolve;
+            return resolver(mdxNode, {}, context, {
+              fieldName: 'body',
+            });
+          },
+        },
+      },
+      interfaces: [`Node`],
+    }),
+
+    schema.buildObjectType({
+      name: `Category`,
+      fields: {
+        id: { type: `ID!` },
+        name: { type: 'String!' },
+        slug: { type: 'String!' },
+        logoUrl: { type: 'String' },
+        logoImage: { type: 'File' },
         body: {
           type: 'String!',
           resolve(source, args, context, info) {
@@ -111,7 +155,15 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
   ]);
 };
 
-exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
+exports.onCreateNode = async ({
+  node,
+  getNode,
+  actions,
+  createNodeId,
+  cache,
+  store,
+  reporter,
+}) => {
   const { createNode, createParentChildLink } = actions;
   if (node.internal.type === `Mdx`) {
     const parent = getNode(node.parent);
@@ -143,6 +195,35 @@ exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
       //     parent: parent,
       //     child: node,
       //   });
+    } else if (collection === 'categories') {
+      const mdxCategory = {
+        name: node.frontmatter.name,
+        slug: node.frontmatter.slug,
+        logoUrl: node.frontmatter.logoUrl,
+        logoImage:
+          node.frontmatter.logoUrl &&
+          (await createRemoteFileNode({
+            url: node.frontmatter.logoUrl,
+            parentNodeId: node.id,
+            createNode,
+            createNodeId,
+            cache,
+            store,
+            reporter,
+          })),
+        body: node.rawBody,
+      };
+
+      createNode({
+        id: createNodeId(`${node.id} >>> Category`),
+        ...mdxCategory,
+        parent: node.id,
+        //children: [],
+        internal: {
+          type: 'Category',
+          contentDigest: node.internal.contentDigest,
+        },
+      });
     } else if (collection === 'persons') {
       const mdxPerson = {
         name: node.frontmatter.name,

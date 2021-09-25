@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
     --color-background: #ffffff;
     --color-heading: #000000;
     --color-text: #374151;
+    --color-border: rgba(0,0,0,0.1);
   }
 
   // box-sizing rules
@@ -67,6 +68,37 @@ const GlobalStyle = createGlobalStyle`
     color: var(--color-text);
   }
 
+  /* Tables */
+
+table {
+  display: table;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 1.5rem;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  //overflow-x: auto;
+}
+
+th {
+  font-weight: 700;
+}
+
+th,
+td {
+  border: 1px solid var(--color-border);
+  text-align: left;
+  padding: 0.75rem;
+  // hyphens: auto;
+  word-break: break-word;
+}
+
+/* tbody tr:nth-child(odd) {
+  background-color: var(--dark-opacity);
+} */
+
   @supports (font-variation-settings: normal) {
     body {
       font-family: "InterVariable";
@@ -87,6 +119,11 @@ const GlobalStyle = createGlobalStyle`
     i {
       font-variation-settings: "slnt" -10;
       font-style: oblique 10deg;
+    }
+
+    th {
+      font-family: "InterVariable", sans-serif;
+      font-variation-settings: "wght" 700; 
     }
   }
 

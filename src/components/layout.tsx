@@ -1,11 +1,4 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.com/docs/use-static-query/
- */
-
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
 
 import styled from 'styled-components';
@@ -32,7 +25,8 @@ const LayoutGrid = styled.div`
 const MainStyled = styled.main`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding-left: 1em;
+  padding-right: 1em;
 `;
 
 const Layout: FC<LayoutProps> = ({ children }) => {
@@ -46,11 +40,22 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     }
   `);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleToggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <>
       <GlobalStyle />
       <LayoutGrid>
-        <Header siteTitle={data?.site?.siteMetadata?.title || 'Title'} />
+        <Header
+          siteTitle={data?.site?.siteMetadata?.title || 'Title'}
+          isMenuOpen={isMenuOpen}
+          onToggleMenu={handleToggleMenu}
+        />
+
         <MainStyled>{children}</MainStyled>
         <footer
           style={{
