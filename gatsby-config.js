@@ -1,9 +1,9 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
-    siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
+    title: `Vitamin Dev`,
+    description: `Learn React, Angular 2+, Javascript and CSS with bite sized, no fluff posts.`,
+    author: `@benoitpaul`,
+    siteUrl: `https://vitamindev.com/`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -20,6 +20,13 @@ module.exports = {
       options: {
         name: `blog`,
         path: `${__dirname}/content/blog`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `categories`,
+        path: `${__dirname}/content/categories`,
       },
     },
     {
@@ -43,6 +50,14 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: 'gatsby-plugin-react-svg',
+      options: {
+        rule: {
+          include: /icons/,
+        },
+      },
+    },
     `gatsby-plugin-gatsby-cloud`,
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
@@ -59,6 +74,12 @@ module.exports = {
               quality: 50,
               withWebp: true,
               withAvif: true,
+            },
+          },
+          {
+            resolve: `gatsby-remark-vscode`,
+            options: {
+              theme: 'Abyss',
             },
           },
         ],

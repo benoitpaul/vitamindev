@@ -1,10 +1,39 @@
 const path = require('path');
+const { createRemoteFileNode } = require('gatsby-source-filesystem');
 
 const createBlogPostPages = async ({ graphql, actions }) => {
-  const blogPostTemplate = path.resolve('./src/templates/post.tsx');
   const { errors, data } = await graphql(`
     {
       allBlogPost {
+        nodes {
+          slug
+          category
+        }
+      }
+    }
+  `);
+  if (errors) {
+    console.log(errors);
+    throw new Error('There was an error');
+  }
+
+  const blogPostTemplate = path.resolve('./src/templates/Post.tsx');
+  const blogPosts = data.allBlogPost.nodes;
+  blogPosts.forEach((post, i) => {
+    actions.createPage({
+      path: `/${post.category}/${post.slug}/`,
+      component: blogPostTemplate,
+      context: {
+        slug: post.slug,
+      },
+    });
+  });
+};
+
+const createCategoryPages = async ({ graphql, actions }) => {
+  const { errors, data } = await graphql(`
+    {
+      allCategory {
         nodes {
           slug
         }
@@ -15,23 +44,25 @@ const createBlogPostPages = async ({ graphql, actions }) => {
     console.log(errors);
     throw new Error('There was an error');
   }
-
-  console.log('data:', data);
-  const blogPosts = data.allBlogPost.nodes;
-  console.log('blogPosts:', blogPosts);
-  blogPosts.forEach((post, i) => {
-    console.log('creating page for: post.slug');
+  const categories = data.allCategory.nodes;
+  const blogCategoryTemplate = path.resolve('./src/templates/Category.tsx');
+  Array.from(categories).forEach(({ slug }) => {
     actions.createPage({
-      path: post.slug,
-      component: blogPostTemplate,
+      path: `/${slug}/`,
+      component: blogCategoryTemplate,
       context: {
-        slug: post.slug,
+        slug,
       },
     });
   });
 };
 
-exports.createPages = createBlogPostPages;
+const createPages = async ({ graphql, actions }) => {
+  await createBlogPostPages({ graphql, actions });
+  await createCategoryPages({ graphql, actions });
+};
+
+exports.createPages = createPages;
 // TODO: sourceNodes vs createSchemaCustomization
 exports.createSchemaCustomization = ({ actions, schema }) => {
   const { createTypes } = actions;
@@ -43,6 +74,9 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         id: { type: `ID!` },
         title: { type: 'String!' },
         slug: { type: 'String!' },
+        description: { type: 'String!' },
+        category: { type: 'String!' },
+        tags: { type: '[String!]!' },
         authors: {
           type: '[Person!]!',
           resolve: (source, args, context, info) => {
@@ -51,6 +85,31 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
               .filter((person) => source.authors.includes(person.email));
           },
         },
+        body: {
+          type: 'String!',
+          resolve(source, args, context, info) {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            const resolver = type.getFields()['body'].resolve;
+            return resolver(mdxNode, {}, context, {
+              fieldName: 'body',
+            });
+          },
+        },
+      },
+      interfaces: [`Node`],
+    }),
+
+    schema.buildObjectType({
+      name: `Category`,
+      fields: {
+        id: { type: `ID!` },
+        name: { type: 'String!' },
+        slug: { type: 'String!' },
+        logoUrl: { type: 'String' },
+        logoImage: { type: 'File' },
         body: {
           type: 'String!',
           resolve(source, args, context, info) {
@@ -96,9 +155,16 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
   ]);
 };
 
-exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
+exports.onCreateNode = async ({
+  node,
+  getNode,
+  actions,
+  createNodeId,
+  cache,
+  store,
+  reporter,
+}) => {
   const { createNode, createParentChildLink } = actions;
-  console.log('node.internal.type: ', node.internal.type);
   if (node.internal.type === `Mdx`) {
     const parent = getNode(node.parent);
     const collection = parent.sourceInstanceName;
@@ -107,6 +173,9 @@ exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
       const mdxBlogPost = {
         title: node.frontmatter.title,
         slug: node.frontmatter.slug,
+        description: node.frontmatter.description,
+        category: node.frontmatter.category,
+        tags: node.frontmatter.tags,
         authors: node.frontmatter.authors,
         body: node.rawBody,
       };
@@ -126,6 +195,35 @@ exports.onCreateNode = ({ node, getNode, actions, createNodeId }) => {
       //     parent: parent,
       //     child: node,
       //   });
+    } else if (collection === 'categories') {
+      const mdxCategory = {
+        name: node.frontmatter.name,
+        slug: node.frontmatter.slug,
+        logoUrl: node.frontmatter.logoUrl,
+        logoImage:
+          node.frontmatter.logoUrl &&
+          (await createRemoteFileNode({
+            url: node.frontmatter.logoUrl,
+            parentNodeId: node.id,
+            createNode,
+            createNodeId,
+            cache,
+            store,
+            reporter,
+          })),
+        body: node.rawBody,
+      };
+
+      createNode({
+        id: createNodeId(`${node.id} >>> Category`),
+        ...mdxCategory,
+        parent: node.id,
+        //children: [],
+        internal: {
+          type: 'Category',
+          contentDigest: node.internal.contentDigest,
+        },
+      });
     } else if (collection === 'persons') {
       const mdxPerson = {
         name: node.frontmatter.name,
