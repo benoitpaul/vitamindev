@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import styled from 'styled-components';
 import Layout from '../components/Layout';
@@ -20,6 +20,8 @@ interface BlogPost {
   category: string;
   tags: string[];
   authors: Author[];
+  publishedDate: string;
+  updatedDate?: string;
   body: string;
 }
 
@@ -43,7 +45,7 @@ const PostInfoSectionStyled = styled.section`
 
 const AuthorsListStyled = styled.ul`
   display: flex;
-  margin: 0;
+  margin: 0 1em 0 0;
   padding: 0;
   li {
     list-style-type: none;
@@ -51,7 +53,15 @@ const AuthorsListStyled = styled.ul`
 `;
 
 const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
-  const { title, description, tags, authors, body } = data.blogPost;
+  const {
+    title,
+    description,
+    tags,
+    authors,
+    publishedDate,
+    updatedDate,
+    body,
+  } = data.blogPost;
   return (
     <Layout>
       <Seo title={title} description={description} />
@@ -59,12 +69,13 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
         <h1>{title}</h1>
         <PostInfoSectionStyled>
           <AuthorsListStyled>
-            {authors?.map((author) => (
+            {authors?.map((author: Author) => (
               <li key={author.slug}>
-                {author.name}: {author.email}
+                <Link to={`/authors/${author.slug}/`}>{author.name}</Link>
               </li>
             ))}
           </AuthorsListStyled>
+          <time>{updatedDate || publishedDate}</time>
         </PostInfoSectionStyled>
         <MDXRenderer>{body}</MDXRenderer>
         <TagList tags={tags} />
@@ -87,6 +98,8 @@ export const pageQuery = graphql`
       description
       category
       tags
+      publishedDate(formatString: "MMMM DD,YYYY")
+      updatedDate(formatString: "MMMM DD,YYYY")
     }
   }
 `;

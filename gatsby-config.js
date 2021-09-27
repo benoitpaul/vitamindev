@@ -78,9 +78,9 @@ module.exports = {
           },
           {
             resolve: `gatsby-remark-vscode`,
-            options: {
-              theme: 'Abyss',
-            },
+            // options: {
+            //   theme: 'Abyss',
+            // },
           },
         ],
       },

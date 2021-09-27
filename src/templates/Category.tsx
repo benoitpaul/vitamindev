@@ -3,7 +3,6 @@ import { graphql, Link } from 'gatsby';
 import styled from 'styled-components';
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
 import Layout from '../components/Layout';
-import Seo from '../components/Seo';
 
 interface BlogPost {
   id: string;
@@ -106,7 +105,9 @@ export const pageQuery = graphql`
         }
       }
     }
-    allBlogPost(filter: { category: { eq: $slug } }) {
+    allBlogPost(
+      filter: { category: { eq: $slug }, publishedDate: { ne: null } }
+    ) {
       nodes {
         title
         slug

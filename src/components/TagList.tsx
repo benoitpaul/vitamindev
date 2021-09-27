@@ -8,16 +8,22 @@ interface TagListProps {
 
 const ListStyled = styled.ul`
   display: flex;
-  list-style-type: none;
+  gap: 0.75em;
+  flex-wrap: wrap;
+
   margin: 0;
   padding: 0;
+
+  font-size: 1rem;
+
+  list-style-type: none;
 `;
 
 const LinkStyled = styled(Link)`
   display: inline-block;
   padding: 0.5em 1em;
 
-  border-radius: 8px;
+  border-radius: 6px;
 
   background-color: var(--color-text);
   color: var(--color-background);

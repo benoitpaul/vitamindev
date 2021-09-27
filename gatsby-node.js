@@ -2,9 +2,10 @@ const path = require('path');
 const { createRemoteFileNode } = require('gatsby-source-filesystem');
 
 const createBlogPostPages = async ({ graphql, actions }) => {
+  // fetch blog posts with a published date (not a draft)
   const { errors, data } = await graphql(`
     {
-      allBlogPost {
+      allBlogPost(filter: { publishedDate: { ne: null } }) {
         nodes {
           slug
           category
@@ -83,6 +84,18 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             return context.nodeModel
               .getAllNodes({ type: 'Person' })
               .filter((person) => source.authors.includes(person.email));
+          },
+        },
+        publishedDate: {
+          type: 'Date',
+          extensions: {
+            dateformat: {},
+          },
+        },
+        updatedDate: {
+          type: 'Date',
+          extensions: {
+            dateformat: {},
           },
         },
         body: {
@@ -177,6 +190,8 @@ exports.onCreateNode = async ({
         category: node.frontmatter.category,
         tags: node.frontmatter.tags,
         authors: node.frontmatter.authors,
+        publishedDate: node.frontmatter.publishedDate,
+        updatedDate: node.frontmatter.updatedDate,
         body: node.rawBody,
       };
 
