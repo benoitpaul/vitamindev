@@ -22,6 +22,7 @@ interface BlogPost {
   authors: Author[];
   publishedDate: string;
   updatedDate?: string;
+  timeToRead: number;
   body: string;
 }
 
@@ -41,11 +42,17 @@ const ArticleStyled = styled.article`
 const PostInfoSectionStyled = styled.section`
   display: flex;
   font-size: 0.75rem;
+  justify-content: space-between;
+
+  .left {
+    display: flex;
+    gap: 0.5em;
+  }
 `;
 
 const AuthorsListStyled = styled.ul`
   display: flex;
-  margin: 0 1em 0 0;
+  margin: 0;
   padding: 0;
   li {
     list-style-type: none;
@@ -60,6 +67,7 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
     authors,
     publishedDate,
     updatedDate,
+    timeToRead,
     body,
   } = data.blogPost;
   return (
@@ -68,14 +76,19 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
       <ArticleStyled>
         <h1>{title}</h1>
         <PostInfoSectionStyled>
-          <AuthorsListStyled>
-            {authors?.map((author: Author) => (
-              <li key={author.slug}>
-                <Link to={`/authors/${author.slug}/`}>{author.name}</Link>
-              </li>
-            ))}
-          </AuthorsListStyled>
-          <time>{updatedDate || publishedDate}</time>
+          <div className="left">
+            <AuthorsListStyled>
+              {authors?.map((author: Author) => (
+                <li key={author.slug}>
+                  <Link to={`/authors/${author.slug}/`}>{author.name}</Link>
+                </li>
+              ))}
+            </AuthorsListStyled>
+            /<time>{updatedDate || publishedDate}</time>
+          </div>
+          <div className="right">
+            <div>{timeToRead} min read</div>
+          </div>
         </PostInfoSectionStyled>
         <MDXRenderer>{body}</MDXRenderer>
         <TagList tags={tags} />
@@ -100,6 +113,7 @@ export const pageQuery = graphql`
       tags
       publishedDate(formatString: "MMMM DD,YYYY")
       updatedDate(formatString: "MMMM DD,YYYY")
+      timeToRead
     }
   }
 `;
