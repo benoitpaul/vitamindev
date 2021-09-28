@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import styled from 'styled-components';
 import Layout from '../components/Layout';
@@ -20,6 +20,9 @@ interface BlogPost {
   category: string;
   tags: string[];
   authors: Author[];
+  publishedDate: string;
+  updatedDate?: string;
+  timeToRead: number;
   body: string;
 }
 
@@ -39,6 +42,12 @@ const ArticleStyled = styled.article`
 const PostInfoSectionStyled = styled.section`
   display: flex;
   font-size: 0.75rem;
+  justify-content: space-between;
+
+  .left {
+    display: flex;
+    gap: 0.5em;
+  }
 `;
 
 const AuthorsListStyled = styled.ul`
@@ -51,20 +60,35 @@ const AuthorsListStyled = styled.ul`
 `;
 
 const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
-  const { title, description, tags, authors, body } = data.blogPost;
+  const {
+    title,
+    description,
+    tags,
+    authors,
+    publishedDate,
+    updatedDate,
+    timeToRead,
+    body,
+  } = data.blogPost;
   return (
     <Layout>
       <Seo title={title} description={description} />
       <ArticleStyled>
         <h1>{title}</h1>
         <PostInfoSectionStyled>
-          <AuthorsListStyled>
-            {authors?.map((author) => (
-              <li key={author.slug}>
-                {author.name}: {author.email}
-              </li>
-            ))}
-          </AuthorsListStyled>
+          <div className="left">
+            <AuthorsListStyled>
+              {authors?.map((author: Author) => (
+                <li key={author.slug}>
+                  <Link to={`/authors/${author.slug}/`}>{author.name}</Link>
+                </li>
+              ))}
+            </AuthorsListStyled>
+            /<time>{updatedDate || publishedDate}</time>
+          </div>
+          <div className="right">
+            <div>{timeToRead} min read</div>
+          </div>
         </PostInfoSectionStyled>
         <MDXRenderer>{body}</MDXRenderer>
         <TagList tags={tags} />
@@ -87,6 +111,9 @@ export const pageQuery = graphql`
       description
       category
       tags
+      publishedDate(formatString: "MMMM DD,YYYY")
+      updatedDate(formatString: "MMMM DD,YYYY")
+      timeToRead
     }
   }
 `;

@@ -2,9 +2,10 @@ const path = require('path');
 const { createRemoteFileNode } = require('gatsby-source-filesystem');
 
 const createBlogPostPages = async ({ graphql, actions }) => {
+  // fetch blog posts with a published date (not a draft)
   const { errors, data } = await graphql(`
     {
-      allBlogPost {
+      allBlogPost(filter: { publishedDate: { ne: null } }) {
         nodes {
           slug
           category
@@ -85,6 +86,47 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
               .filter((person) => source.authors.includes(person.email));
           },
         },
+        publishedDate: {
+          type: 'Date',
+          extensions: {
+            dateformat: {},
+          },
+        },
+        updatedDate: {
+          type: 'Date',
+          extensions: {
+            dateformat: {},
+          },
+        },
+        timeToRead: {
+          type: 'Int!',
+          resolve: (source, args, context, info) => {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            const resolver = type.getFields()['timeToRead'].resolve;
+            return resolver(mdxNode, {}, context, {
+              fieldName: 'timeToRead',
+            });
+          },
+        },
+        // wordCount: {
+        //   type: 'MdxWordCount!',
+        //   //type: 'Int!',
+        //   resolve: (source, args, context, info) => {
+        //     const type = info.schema.getType(`Mdx`);
+        //     console.log('source.parent', source.parent);
+        //     const mdxNode = context.nodeModel.getNodeById({
+        //       id: source.parent,
+        //     });
+        //     console.log('mdxNode', mdxNode);
+        //     const resolver = type.getFields()['wordCount'].resolve;
+        //     return resolver(mdxNode, {}, context, {
+        //       fieldName: 'wordCount',
+        //     });
+        //   },
+        // },
         body: {
           type: 'String!',
           resolve(source, args, context, info) {
@@ -169,86 +211,94 @@ exports.onCreateNode = async ({
     const parent = getNode(node.parent);
     const collection = parent.sourceInstanceName;
 
-    if (collection === 'blog') {
-      const mdxBlogPost = {
-        title: node.frontmatter.title,
-        slug: node.frontmatter.slug,
-        description: node.frontmatter.description,
-        category: node.frontmatter.category,
-        tags: node.frontmatter.tags,
-        authors: node.frontmatter.authors,
-        body: node.rawBody,
-      };
+    try {
+      if (collection === 'blog') {
+        const mdxBlogPost = {
+          title: node.frontmatter.title,
+          slug: node.frontmatter.slug,
+          description: node.frontmatter.description,
+          category: node.frontmatter.category,
+          tags: node.frontmatter.tags,
+          authors: node.frontmatter.authors,
+          publishedDate: node.frontmatter.publishedDate,
+          updatedDate: node.frontmatter.updatedDate,
+          // timeToRead: node.timeToRead,
+          // wordCount: node.wordCount.words,
+          body: node.rawBody,
+        };
 
-      createNode({
-        id: createNodeId(`${node.id} >>> BlogPost`),
-        ...mdxBlogPost,
-        parent: node.id,
-        //children: [],
-        internal: {
-          type: 'BlogPost',
-          contentDigest: node.internal.contentDigest,
-        },
-      });
+        createNode({
+          id: createNodeId(`${node.id} >>> BlogPost`),
+          ...mdxBlogPost,
+          parent: node.id,
+          //children: [],
+          internal: {
+            type: 'BlogPost',
+            contentDigest: node.internal.contentDigest,
+          },
+        });
 
-      //   createParentChildLink({
-      //     parent: parent,
-      //     child: node,
-      //   });
-    } else if (collection === 'categories') {
-      const mdxCategory = {
-        name: node.frontmatter.name,
-        slug: node.frontmatter.slug,
-        logoUrl: node.frontmatter.logoUrl,
-        logoImage:
-          node.frontmatter.logoUrl &&
-          (await createRemoteFileNode({
-            url: node.frontmatter.logoUrl,
-            parentNodeId: node.id,
-            createNode,
-            createNodeId,
-            cache,
-            store,
-            reporter,
-          })),
-        body: node.rawBody,
-      };
+        createParentChildLink({
+          parent: parent,
+          child: node,
+        });
+      } else if (collection === 'categories') {
+        const mdxCategory = {
+          name: node.frontmatter.name,
+          slug: node.frontmatter.slug,
+          logoUrl: node.frontmatter.logoUrl,
+          logoImage:
+            node.frontmatter.logoUrl &&
+            (await createRemoteFileNode({
+              url: node.frontmatter.logoUrl,
+              parentNodeId: node.id,
+              createNode,
+              createNodeId,
+              cache,
+              store,
+              reporter,
+            })),
+          body: node.rawBody,
+        };
 
-      createNode({
-        id: createNodeId(`${node.id} >>> Category`),
-        ...mdxCategory,
-        parent: node.id,
-        //children: [],
-        internal: {
-          type: 'Category',
-          contentDigest: node.internal.contentDigest,
-        },
-      });
-    } else if (collection === 'persons') {
-      const mdxPerson = {
-        name: node.frontmatter.name,
-        email: node.frontmatter.email,
-        slug: node.frontmatter.slug,
-        photoUrl: node.frontmatter.photoUrl,
-        socialUrls: node.frontmatter.socialUrls,
-        bio: node.rawBody,
-      };
+        createNode({
+          id: createNodeId(`${node.id} >>> Category`),
+          ...mdxCategory,
+          parent: node.id,
+          //children: [],
+          internal: {
+            type: 'Category',
+            contentDigest: node.internal.contentDigest,
+          },
+        });
+      } else if (collection === 'persons') {
+        const mdxPerson = {
+          name: node.frontmatter.name,
+          email: node.frontmatter.email,
+          slug: node.frontmatter.slug,
+          photoUrl: node.frontmatter.photoUrl,
+          socialUrls: node.frontmatter.socialUrls,
+          bio: node.rawBody,
+        };
 
-      createNode({
-        id: createNodeId(`${node.id} >>> Person`),
-        ...mdxPerson,
-        parent: node.id,
-        //children: [],
-        internal: {
-          type: 'Person',
-          contentDigest: node.internal.contentDigest,
-        },
-      });
+        createNode({
+          id: createNodeId(`${node.id} >>> Person`),
+          ...mdxPerson,
+          parent: node.id,
+          //children: [],
+          internal: {
+            type: 'Person',
+            contentDigest: node.internal.contentDigest,
+          },
+        });
 
-      //   createParentChildLink({
-      //     parent: parent,
-      //     child: node,
-      //   });
+        //   createParentChildLink({
+        //     parent: parent,
+        //     child: node,
+        //   });
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 };
