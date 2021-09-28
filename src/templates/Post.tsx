@@ -23,6 +23,7 @@ interface BlogPost {
   publishedDate: string;
   updatedDate?: string;
   timeToRead: number;
+  wordCount: number;
   body: string;
 }
 
@@ -44,9 +45,10 @@ const PostInfoSectionStyled = styled.section`
   font-size: 0.75rem;
   justify-content: space-between;
 
-  .left {
+  .left,
+  .right {
     display: flex;
-    gap: 0.5em;
+    gap: 0.25em;
   }
 `;
 
@@ -68,8 +70,10 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
     publishedDate,
     updatedDate,
     timeToRead,
+    wordCount,
     body,
   } = data.blogPost;
+  const postDate = updatedDate || publishedDate;
   return (
     <Layout>
       <Seo title={title} description={description} />
@@ -84,10 +88,14 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
                 </li>
               ))}
             </AuthorsListStyled>
-            /<time>{updatedDate || publishedDate}</time>
+            /<time dateTime={postDate}>{postDate}</time>
           </div>
           <div className="right">
-            <div>{timeToRead} min read</div>
+            <div>
+              <time dateTime={`PM${timeToRead}`}>{timeToRead}</time> min read
+            </div>
+            &#8226;
+            <div>{wordCount} words</div>
           </div>
         </PostInfoSectionStyled>
         <MDXRenderer>{body}</MDXRenderer>
@@ -111,9 +119,12 @@ export const pageQuery = graphql`
       description
       category
       tags
-      publishedDate(formatString: "MMMM DD,YYYY")
-      updatedDate(formatString: "MMMM DD,YYYY")
+      # publishedDate(formatString: "MMMM DD,YYYY")
+      # updatedDate(formatString: "MMMM DD,YYYY")
+      publishedDate
+      updatedDate
       timeToRead
+      wordCount
     }
   }
 `;
