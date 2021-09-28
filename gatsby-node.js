@@ -111,22 +111,20 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             });
           },
         },
-        // wordCount: {
-        //   type: 'MdxWordCount!',
-        //   //type: 'Int!',
-        //   resolve: (source, args, context, info) => {
-        //     const type = info.schema.getType(`Mdx`);
-        //     console.log('source.parent', source.parent);
-        //     const mdxNode = context.nodeModel.getNodeById({
-        //       id: source.parent,
-        //     });
-        //     console.log('mdxNode', mdxNode);
-        //     const resolver = type.getFields()['wordCount'].resolve;
-        //     return resolver(mdxNode, {}, context, {
-        //       fieldName: 'wordCount',
-        //     });
-        //   },
-        // },
+        wordCount: {
+          type: 'Int!',
+          resolve: async (source, args, context, info) => {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            const resolver = type.getFields()['wordCount'].resolve;
+            const wordCount = await resolver(mdxNode, {}, context, {
+              fieldName: 'wordCount',
+            });
+            return wordCount.words;
+          },
+        },
         body: {
           type: 'String!',
           resolve(source, args, context, info) {
@@ -222,8 +220,6 @@ exports.onCreateNode = async ({
           authors: node.frontmatter.authors,
           publishedDate: node.frontmatter.publishedDate,
           updatedDate: node.frontmatter.updatedDate,
-          // timeToRead: node.timeToRead,
-          // wordCount: node.wordCount.words,
           body: node.rawBody,
         };
 
@@ -271,6 +267,11 @@ exports.onCreateNode = async ({
             contentDigest: node.internal.contentDigest,
           },
         });
+
+        createParentChildLink({
+          parent: parent,
+          child: node,
+        });
       } else if (collection === 'persons') {
         const mdxPerson = {
           name: node.frontmatter.name,
@@ -292,10 +293,10 @@ exports.onCreateNode = async ({
           },
         });
 
-        //   createParentChildLink({
-        //     parent: parent,
-        //     child: node,
-        //   });
+        createParentChildLink({
+          parent: parent,
+          child: node,
+        });
       }
     } catch (err) {
       console.log(err);
