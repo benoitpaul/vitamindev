@@ -4,6 +4,7 @@ import { useStaticQuery, graphql } from 'gatsby';
 import styled from 'styled-components';
 import Header from './Header';
 import GlobalStyle from '../styles/GlobalStyle';
+import SkipLink from './SkipLink';
 
 interface LayoutProps {
   children: ReactNode;
@@ -50,13 +51,16 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <>
       <GlobalStyle />
       <LayoutGrid>
+        <SkipLink contentId="#main-content" />
         <Header
           siteTitle={data?.site?.siteMetadata?.title || 'Title'}
           isMenuOpen={isMenuOpen}
           onToggleMenu={handleToggleMenu}
         />
 
-        <MainStyled>{children}</MainStyled>
+        <MainStyled id="main-content" tabIndex={-1}>
+          {children}
+        </MainStyled>
         <footer
           style={{
             marginTop: '2rem',
