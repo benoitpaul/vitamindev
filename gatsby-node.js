@@ -73,6 +73,15 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
       name: `BlogPost`,
       fields: {
         id: { type: `ID!` },
+        canonicalUrl: {
+          type: 'String!',
+          resolve: (source, args, context, info) => {
+            const { siteUrl } = context.nodeModel.getAllNodes({
+              type: 'Site',
+            })[0].siteMetadata;
+            return `${siteUrl}/${source.category}/${source.slug}/`;
+          },
+        },
         title: { type: 'String!' },
         slug: { type: 'String!' },
         description: { type: 'String!' },
@@ -138,6 +147,16 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             });
           },
         },
+        internalContent: {
+          type: 'String!',
+          resolve(source, args, context, info) {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            return mdxNode.internal.content;
+          },
+        },
       },
       interfaces: [`Node`],
     }),
@@ -175,7 +194,19 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         email: { type: 'String!' },
         slug: { type: 'String!' },
         photoUrl: { type: 'String' },
-        socialUrls: { type: '[String]' },
+        canonicalUrl: {
+          type: 'String!',
+          resolve: (source, args, context, info) => {
+            const { siteUrl } = context.nodeModel.getAllNodes({
+              type: 'Site',
+            })[0].siteMetadata;
+            return `${siteUrl}/author/${source.slug}/`;
+          },
+        },
+        homepageUrl: { type: 'String' },
+        twitterUrl: { type: 'String' },
+        linkedInUrl: { type: 'String' },
+        facebookUrl: { type: 'String' },
         bio: {
           type: 'String!',
           resolve(source, args, context, info) {
@@ -230,6 +261,7 @@ exports.onCreateNode = async ({
           //children: [],
           internal: {
             type: 'BlogPost',
+            content: node.internal.content,
             contentDigest: node.internal.contentDigest,
           },
         });
@@ -278,7 +310,10 @@ exports.onCreateNode = async ({
           email: node.frontmatter.email,
           slug: node.frontmatter.slug,
           photoUrl: node.frontmatter.photoUrl,
-          socialUrls: node.frontmatter.socialUrls,
+          homepageUrl: node.frontmatter.homepageUrl,
+          twitterUrl: node.frontmatter.twitterUrl,
+          linkedInUrl: node.frontmatter.linkedInUrl,
+          facebookUrl: node.frontmatter.facebookUrl,
           bio: node.rawBody,
         };
 
