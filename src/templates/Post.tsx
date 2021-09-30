@@ -5,26 +5,13 @@ import styled from 'styled-components';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';
 import TagList from '../components/TagList';
+import BlogPostingSchemaMarkup from '../components/Seo/BlogPostingSchemaMarkup';
+import { BlogPost } from '../components/types';
 
 interface Author {
   name: string;
   slug: string;
   email: string;
-}
-
-interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  category: string;
-  tags: string[];
-  authors: Author[];
-  publishedDate: string;
-  updatedDate?: string;
-  timeToRead: number;
-  wordCount: number;
-  body: string;
 }
 
 interface BlogPostTemplateProps {
@@ -77,6 +64,8 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
   return (
     <Layout>
       <Seo title={title} description={description} />
+      <BlogPostingSchemaMarkup blogPost={data.blogPost} />
+
       <ArticleStyled>
         <h1>{title}</h1>
         <PostInfoSectionStyled>
@@ -112,8 +101,14 @@ export const pageQuery = graphql`
         email
         name
         slug
+        canonicalUrl
+        homepageUrl
+        twitterUrl
+        linkedInUrl
+        facebookUrl
       }
       body
+      internalContent
       slug
       title
       description
@@ -125,6 +120,7 @@ export const pageQuery = graphql`
       updatedDate
       timeToRead
       wordCount
+      canonicalUrl
     }
   }
 `;
