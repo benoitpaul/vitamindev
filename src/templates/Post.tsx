@@ -73,7 +73,7 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
             <AuthorsListStyled>
               {authors?.map((author: Author) => (
                 <li key={author.slug}>
-                  <Link to={`/authors/${author.slug}/`}>{author.name}</Link>
+                  <Link to={`/author/${author.slug}/`}>{author.name}</Link>
                 </li>
               ))}
             </AuthorsListStyled>

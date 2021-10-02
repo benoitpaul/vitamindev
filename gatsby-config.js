@@ -4,6 +4,8 @@ module.exports = {
     description: `Learn React, Angular 2+, Javascript and CSS with bite sized, no fluff posts.`,
     author: `@benoitpaul`,
     siteUrl: `https://vitamindev.com/`,
+    twitterUrl: `https://twitter.com/vitamindevblog`,
+    youtubeUrl: `https://www.youtube.com/channel/UCUvU9SoGYrUwNZyifWkQHNg`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
