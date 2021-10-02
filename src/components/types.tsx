@@ -1,3 +1,15 @@
+export interface SiteMetadata {
+  title: string;
+  siteUrl: string;
+  description: string;
+  author: string;
+  logoUrl?: string;
+  twitterUrl?: string;
+  youtubeUrl?: string;
+  facebookUrl?: string;
+  linkedInUrl?: string;
+}
+
 export interface Author {
   name: string;
   slug: string;
@@ -25,40 +37,3 @@ export interface BlogPost {
   body: string;
   internalContent: string;
 }
-
-export type JsonLdAuthor = {
-  '@type': 'Person';
-  name: string;
-  // givenName: string;
-  // familyName: string;
-  email: string;
-  url: string;
-  sameAs: string[];
-};
-
-export type JsonLdOrganization = {
-  '@context': 'https://schema.org';
-  '@type': 'Organization';
-  url: string;
-  name: string;
-  description: string;
-  logo: string;
-};
-
-export type JsonLdBlogPosting = {
-  // '@context': 'http://schema.org';
-  // '@type': 'BlogPosting';
-  image?: string;
-  url: string;
-  headline: string;
-  name: string;
-  description: string;
-  datePublished: Date;
-  dateModified: Date;
-  author?: JsonLdAuthor[];
-  publisher?: JsonLdOrganization;
-  articleSection: string;
-  articleBody: string;
-  wordCount?: number;
-  timeRequired?: string;
-};
