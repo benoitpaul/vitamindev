@@ -87,5 +87,13 @@ module.exports = {
         ],
       },
     },
+    {
+      resolve: `gatsby-source-gravatar`,
+      options: {
+        // Required.
+        // A list of emails to create URLs for.
+        emails: [],
+      },
+    },
   ],
 };
