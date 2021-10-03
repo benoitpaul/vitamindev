@@ -10,7 +10,7 @@ export interface SiteMetadata {
   linkedInUrl?: string;
 }
 
-export interface Author {
+export interface Person {
   name: string;
   slug: string;
   email: string;
@@ -19,7 +19,10 @@ export interface Author {
   twitterUrl?: string;
   linkedInUrl?: string;
   facebookUrl?: string;
+  description: string;
 }
+
+export type Author = Omit<Person, 'bio'>;
 
 export interface BlogPost {
   id: string;
@@ -36,4 +39,18 @@ export interface BlogPost {
   wordCount: number;
   body: string;
   internalContent: string;
+}
+
+export interface BlogPostItem {
+  title: string;
+  slug: string;
+  category: string;
+  timeToRead: number;
+  description: string;
+  publishedDate: string;
+  updatedDate?: string;
+  authors: {
+    name: string;
+    slug: string;
+  }[];
 }

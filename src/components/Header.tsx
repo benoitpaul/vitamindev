@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import { graphql, Link, useStaticQuery } from 'gatsby';
 import styled from 'styled-components';
-import IconMenu from '../icons/icon-menu.svg';
-import IconClose from '../icons/icon-close.svg';
-import ScreenReaderOnly from './ScreenReaderOnly';
-import StyledSvgButton from './StyledSvgButton';
+// import IconMenu from '../icons/icon-menu.svg';
+// import IconClose from '../icons/icon-close.svg';
+import Hamburger from 'hamburger-react';
+// import ScreenReaderOnly from './ScreenReaderOnly';
+// import StyledSvgButton from './StyledSvgButton';
 
 interface HeaderProps {
   siteTitle?: string;
@@ -84,7 +85,8 @@ const Header: FC<HeaderProps> = ({
       <NavStyled isMenuOpen={isMenuOpen}>
         <MenuBarStyled>
           <Link to="/">{siteTitle}</Link>
-          <StyledSvgButton
+          <Hamburger toggled={isMenuOpen} toggle={onToggleMenu} />
+          {/* <StyledSvgButton
             type="button"
             $size="large"
             onClick={onToggleMenu}
@@ -94,7 +96,7 @@ const Header: FC<HeaderProps> = ({
               {isMenuOpen ? <IconClose /> : <IconMenu />}
               <ScreenReaderOnly>Click to toggle menu</ScreenReaderOnly>
             </>
-          </StyledSvgButton>
+          </StyledSvgButton> */}
         </MenuBarStyled>
         <MenuStyled isMenuOpen={isMenuOpen}>
           <ul>

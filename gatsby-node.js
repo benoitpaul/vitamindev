@@ -20,7 +20,7 @@ const createBlogPostPages = async ({ graphql, actions }) => {
 
   const blogPostTemplate = path.resolve('./src/templates/Post.tsx');
   const blogPosts = data.allBlogPost.nodes;
-  blogPosts.forEach((post, i) => {
+  blogPosts.forEach((post) => {
     actions.createPage({
       path: `/${post.category}/${post.slug}/`,
       component: blogPostTemplate,
@@ -58,9 +58,38 @@ const createCategoryPages = async ({ graphql, actions }) => {
   });
 };
 
+const createAuthorsPages = async ({ graphql, actions }) => {
+  const { errors, data } = await graphql(`
+    {
+      allPerson {
+        nodes {
+          slug
+        }
+      }
+    }
+  `);
+  if (errors) {
+    console.log(errors);
+    throw new Error('There was an error');
+  }
+
+  const authorTemplate = path.resolve('./src/templates/Author.tsx');
+  const persons = data.allPerson.nodes;
+  persons.forEach((person, i) => {
+    actions.createPage({
+      path: `/author/${person.slug}/`,
+      component: authorTemplate,
+      context: {
+        slug: person.slug,
+      },
+    });
+  });
+};
+
 const createPages = async ({ graphql, actions }) => {
   await createBlogPostPages({ graphql, actions });
   await createCategoryPages({ graphql, actions });
+  await createAuthorsPages({ graphql, actions });
 };
 
 exports.createPages = createPages;
@@ -207,7 +236,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         twitterUrl: { type: 'String' },
         linkedInUrl: { type: 'String' },
         facebookUrl: { type: 'String' },
-        bio: {
+        description: {
           type: 'String!',
           resolve(source, args, context, info) {
             const type = info.schema.getType(`Mdx`);
@@ -314,7 +343,7 @@ exports.onCreateNode = async ({
           twitterUrl: node.frontmatter.twitterUrl,
           linkedInUrl: node.frontmatter.linkedInUrl,
           facebookUrl: node.frontmatter.facebookUrl,
-          bio: node.rawBody,
+          description: node.rawBody,
         };
 
         createNode({
