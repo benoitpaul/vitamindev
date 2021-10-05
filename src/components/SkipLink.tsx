@@ -21,10 +21,9 @@ const StyledAnchor = styled.a`
     z-index: 999;
     font-size: 1.2rem;
     text-decoration: underline;
-    color: #1295e6;
     text-align: center;
 
-    background: #084367;
+    background: var(--color-secondary-900);
     color: white;
   }
 `;

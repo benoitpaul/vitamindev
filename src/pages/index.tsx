@@ -1,21 +1,46 @@
 import React, { FC } from 'react';
-import { Link } from 'gatsby';
 
+import styled from 'styled-components';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';
 import OrganizationSchemaMarkup from '../components/Seo/OrganizationSchemaMarkup';
+import LatestBlogPosts from '../components/LatestBlogPosts';
+
+// const StyledHeroSection = styled.section`
+//   padding: 4em 0;
+
+//   background: linear-gradient(
+//     to top right,
+//     var(--color-primary-200),
+//     var(--color-primary-600)
+//   );
+
+//   h1,
+//   p {
+//     text-align: center;
+//   }
+// `;
+
+const StyledLatestPostsSection = styled.section`
+  padding: 2em 1em;
+  background: var(--color-background-02);
+`;
 
 const IndexPage: FC<void> = () => (
   <Layout>
     <Seo title="Home" />
     <OrganizationSchemaMarkup />
-    <h1>Software development</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <p>
-      <Link to="/page-2/">Go to page 2</Link> <br />
-      <Link to="/using-typescript/">Go to &quot;Using TypeScript&quot;</Link>
-    </p>
+
+    {/* <StyledHeroSection>
+      <h1>Vitamin Dev</h1>
+      <p>Your daily dose of software development goodies</p>
+    </StyledHeroSection> */}
+    <StyledLatestPostsSection>
+      <div className="container">
+        <h1>Latest posts</h1>
+        <LatestBlogPosts />
+      </div>
+    </StyledLatestPostsSection>
   </Layout>
 );
 

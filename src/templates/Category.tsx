@@ -1,94 +1,48 @@
 import React, { FC } from 'react';
-import { graphql, Link } from 'gatsby';
+import { graphql } from 'gatsby';
 import styled from 'styled-components';
-import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
 import Layout from '../components/Layout';
-
-interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  category: string;
-  tags: string[];
-}
+import PostList from '../components/PostList';
+import { BlogPostItem } from '../components/types';
+import Seo from '../components/Seo';
 
 interface Category {
   id: string;
   name: string;
   slug: string;
   logoUrl?: string;
-  logoImage?: IGatsbyImageData;
 }
 
 interface BlogCategoryTemplateProps {
   data: {
     category: Category;
     allBlogPost: {
-      nodes: BlogPost[];
+      nodes: BlogPostItem[];
     };
   };
 }
 
-const PostListStyled = styled.ul`
-  display: grid;
-  // grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  grid-template-columns: 1fr;
-  gap: 2em;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
+const StyledCategorySection = styled.section`
+  flex: 1;
+  padding: 2em 1em;
 
-  article {
-    display: flex;
-    flex-direction: column;
-    padding: 2em 1em;
-    border: solid 1px black;
-    border-radius: 8px;
-
-    font-size: 1rem;
-  }
-
-  a {
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+  background: var(--color-background-02);
 `;
 
 const BlogCategoryTemplate: FC<BlogCategoryTemplateProps> = ({ data }) => {
   const { category } = data;
   const { nodes: posts } = data.allBlogPost;
-  const image = category.logoImage && getImage(category.logoImage);
   return (
     <Layout>
-      {/* <Seo title={title} description={description} /> */}
-      <h1>{category.name}</h1>
-      <div className="logo">
-        {image && <GatsbyImage image={image} alt={`${category.name} logo`} />}
-        {!image && category.logoUrl && (
-          <img
-            src={category.logoUrl}
-            height={200}
-            width={200}
-            alt={`${category.name} logo`}
-          />
-        )}
-      </div>
-      <PostListStyled>
-        {posts?.map((post) => (
-          <li key={post.slug}>
-            <Link to={`/${post.category}/${post.slug}/`}>
-              <article>
-                <h2>{post.title}</h2>
-                <p>{post.description}</p>
-              </article>
-            </Link>
-          </li>
-        ))}
-      </PostListStyled>
+      <Seo title={category.name} description={`${category.name} posts`} />
+      <StyledCategorySection>
+        <div className="container">
+          <div className="category-title">
+            <h1>{category.name}</h1>
+          </div>
+          <PostList posts={posts} hideCategory />
+        </div>
+      </StyledCategorySection>
     </Layout>
   );
 };
@@ -113,7 +67,14 @@ export const pageQuery = graphql`
         slug
         category
         description
+        timeToRead
         tags
+        publishedDate
+        updatedDate
+        authors {
+          name
+          slug
+        }
       }
     }
   }

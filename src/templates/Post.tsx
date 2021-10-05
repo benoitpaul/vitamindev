@@ -21,10 +21,18 @@ interface BlogPostTemplateProps {
 }
 
 const ArticleStyled = styled.article`
+  flex: 1;
   width: 100%;
   max-width: 42rem;
   margin-left: auto;
   margin-right: auto;
+  padding: 2em 1em;
+
+  .category a {
+    display: inline-block;
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+  }
 `;
 
 const PostInfoSectionStyled = styled.section`
@@ -51,6 +59,7 @@ const AuthorsListStyled = styled.ul`
 const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
   const {
     title,
+    category,
     description,
     tags,
     authors,
@@ -67,6 +76,9 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
       <BlogPostingSchemaMarkup blogPost={data.blogPost} />
 
       <ArticleStyled>
+        <section className="category">
+          <Link to={`/${category}/`}>{category}</Link>
+        </section>
         <h1>{title}</h1>
         <PostInfoSectionStyled>
           <div className="left">

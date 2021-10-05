@@ -25,8 +25,7 @@ const LinkStyled = styled(Link)`
 
   border-radius: 6px;
 
-  background-color: var(--color-text);
-  color: var(--color-background);
+  background-color: var(--color-secondary-50);
 
   text-decoration: none;
 

@@ -6,6 +6,7 @@ import { BlogPostItem } from './types';
 
 interface PostListProps {
   posts: BlogPostItem[];
+  hideCategory?: boolean;
 }
 
 const ListStyled = styled.ul`
@@ -21,8 +22,9 @@ const ListStyled = styled.ul`
     display: flex;
     flex-direction: column;
     padding: 2em 1em;
-    border: solid 1px black;
     border-radius: 8px;
+
+    background: var(--color-background-01);
 
     font-size: 1rem;
   }
@@ -38,7 +40,7 @@ const ListStyled = styled.ul`
   .category a {
     display: inline-block;
     text-transform: uppercase;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.5em;
   }
 
   .info {
@@ -49,7 +51,7 @@ const ListStyled = styled.ul`
   }
 `;
 
-const PostList: FC<PostListProps> = ({ posts }) => {
+const PostList: FC<PostListProps> = ({ posts, hideCategory }) => {
   return (
     <ListStyled>
       {posts?.map((post) => {
@@ -57,9 +59,11 @@ const PostList: FC<PostListProps> = ({ posts }) => {
         return (
           <li key={post.slug}>
             <article>
-              <section className="category">
-                <Link to={`/${post.category}/`}>{post.category}</Link>
-              </section>
+              {!hideCategory && (
+                <section className="category">
+                  <Link to={`/${post.category}/`}>{post.category}</Link>
+                </section>
+              )}
               <Link to={`/${post.category}/${post.slug}/`}>
                 <h2>{post.title}</h2>
               </Link>

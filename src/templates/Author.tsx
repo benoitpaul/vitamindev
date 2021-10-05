@@ -27,9 +27,16 @@ const StyledAuthorSection = styled.section`
   display: flex;
   flex-direction: column;
 
-  .description {
-    display: flex;
+  .info {
+    display: grid;
+    grid-template-columns: auto 1fr;
     gap: 1em;
+
+    padding: 1em;
+
+    .description {
+      grid-column: 1 / -1;
+    }
   }
 
   .links {
@@ -38,10 +45,15 @@ const StyledAuthorSection = styled.section`
 
     a {
       svg {
-        height: 32px;
-        width: 32px;
+        height: 24px;
+        width: 24px;
       }
     }
+  }
+
+  .latest-posts {
+    padding: 2em 1em;
+    background: var(--color-background-02);
   }
 `;
 
@@ -58,38 +70,43 @@ const AuthorTemplate: FC<AuthorTemplateProps> = ({ data }) => {
       <Seo title={name} description={description} />
       <PersonSchemaMarkup author={data.person} />
       <StyledAuthorSection>
-        <section className="description">
+        <article className="info container">
           <StyledGravatar
             src={gravatarUrl}
             alt={`${name}'s gravatar`}
             width={128}
             height={128}
           />
-          <article>
+          <section>
             <h1>{name}</h1>
+            <section className="links">
+              {twitterUrl && (
+                <a href={twitterUrl}>
+                  <FaTwitter />
+                </a>
+              )}
+              {linkedInUrl && (
+                <a href={linkedInUrl}>
+                  <FaLinkedin />
+                </a>
+              )}
+              {facebookUrl && (
+                <a href={facebookUrl}>
+                  <FaFacebook />
+                </a>
+              )}
+            </section>
+          </section>
+          <div className="description">
             <MDXRenderer>{description}</MDXRenderer>
-          </article>
-        </section>
-        <section className="links">
-          {twitterUrl && (
-            <a href={twitterUrl}>
-              <FaTwitter />
-            </a>
-          )}
-          {linkedInUrl && (
-            <a href={linkedInUrl}>
-              <FaLinkedin />
-            </a>
-          )}
-          {facebookUrl && (
-            <a href={facebookUrl}>
-              <FaFacebook />
-            </a>
-          )}
-        </section>
-        <section className="latestPosts">
-          <h2>Latest posts by {name}</h2>
-          <PostList posts={latestBlogPosts} />
+          </div>
+        </article>
+
+        <section className="latest-posts">
+          <div className="container">
+            <h2>Latest posts by {name}</h2>
+            <PostList posts={latestBlogPosts} />
+          </div>
         </section>
       </StyledAuthorSection>
     </Layout>
