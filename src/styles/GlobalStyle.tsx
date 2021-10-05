@@ -134,7 +134,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     &:focus {
-      outline: currentColor dotted 2px;
+      outline: currentColor dotted 3px;
       outline-offset: 2px;    
     }
 

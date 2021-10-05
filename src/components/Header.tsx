@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { CSSProperties, FC, useEffect } from 'react';
 import { graphql, Link, useStaticQuery } from 'gatsby';
 import styled from 'styled-components';
 // import IconMenu from '../icons/icon-menu.svg';
@@ -54,10 +54,6 @@ const MenuBarStyled = styled.section`
   }
 `;
 
-interface MenuStyledProps {
-  isMenuOpen: boolean;
-}
-
 const DesktopMenuStyled = styled.section`
   display: none;
   @media only screen and (min-width: 42rem) {
@@ -78,10 +74,13 @@ const DesktopMenuStyled = styled.section`
   }
 `;
 
-const MobileMenuStyled = styled.section<MenuStyledProps>`
+interface MobileMenuStyledProps {
+  isMenuOpen: boolean;
+}
+
+const MobileMenuStyled = styled.section<MobileMenuStyledProps>`
   flex: 1;
   width: 100%;
-  // display: ${(props) => (props.isMenuOpen ? 'block' : 'none')};
   visibility: ${(props) => (props.isMenuOpen ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.isMenuOpen ? '1' : '0')};
   transform: translateX(${(props) => (props.isMenuOpen ? '0px' : '-1000px')});
@@ -93,7 +92,6 @@ const MobileMenuStyled = styled.section<MenuStyledProps>`
     list-style-type: none;
 
     height: ${(props) => (props.isMenuOpen ? 'auto' : '0')};
-    // opacity: ${(props) => (props.isMenuOpen ? '1' : '0')};
 
     a {
       display: inline-block;
@@ -122,6 +120,23 @@ const Header: FC<HeaderProps> = ({
       }
     }
   `);
+
+  const remToPixels = (rem: number): number => {
+    return (
+      rem * parseFloat(getComputedStyle(document.documentElement).fontSize)
+    );
+  };
+
+  const handleOnResize = () => {
+    if (window.innerWidth >= remToPixels(42) && isMenuOpen) {
+      onToggleMenu();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleOnResize);
+    return () => window.removeEventListener('resize', handleOnResize);
+  }, [isMenuOpen, onToggleMenu]);
 
   return (
     <header>
