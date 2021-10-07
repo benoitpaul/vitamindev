@@ -1,23 +1,18 @@
 import React, { FC } from 'react';
 import { graphql } from 'gatsby';
 import styled from 'styled-components';
+import { MDXRenderer } from 'gatsby-plugin-mdx';
 import Layout from '../components/Layout';
 import PostList from '../components/PostList';
-import { BlogPostItem } from '../components/types';
+import { Category, BlogPost } from '../components/types';
 import Seo from '../components/Seo';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  logoUrl?: string;
-}
+import CategorySchemaMarkup from '../components/Seo/CategorySchemaMarkup';
 
 interface BlogCategoryTemplateProps {
   data: {
     category: Category;
     allBlogPost: {
-      nodes: BlogPostItem[];
+      nodes: BlogPost[];
     };
   };
 }
@@ -34,12 +29,17 @@ const BlogCategoryTemplate: FC<BlogCategoryTemplateProps> = ({ data }) => {
   const { nodes: posts } = data.allBlogPost;
   return (
     <Layout>
-      <Seo title={category.name} description={`${category.name} posts`} />
+      <Seo
+        title={`${category.name} posts`}
+        description={category.descriptionExcerpt}
+      />
+      <CategorySchemaMarkup category={category} blogPosts={posts} />
       <StyledCategorySection>
         <div className="container">
           <div className="category-title">
             <h1>{category.name}</h1>
           </div>
+          <MDXRenderer>{category.description}</MDXRenderer>
           <PostList posts={posts} hideCategory />
         </div>
       </StyledCategorySection>
@@ -52,6 +52,9 @@ export const pageQuery = graphql`
     category(slug: { eq: $slug }) {
       name
       slug
+      canonicalUrl
+      description
+      descriptionExcerpt
       logoUrl
       logoImage {
         childImageSharp {
@@ -63,18 +66,30 @@ export const pageQuery = graphql`
       filter: { category: { eq: $slug }, publishedDate: { ne: null } }
     ) {
       nodes {
-        title
-        slug
-        category
-        description
-        timeToRead
-        tags
-        publishedDate
-        updatedDate
         authors {
+          email
           name
           slug
+          canonicalUrl
+          homepageUrl
+          twitterUrl
+          linkedInUrl
+          facebookUrl
         }
+        body
+        internalContent
+        slug
+        title
+        description
+        category
+        tags
+        # publishedDate(formatString: "MMMM DD,YYYY")
+        # updatedDate(formatString: "MMMM DD,YYYY")
+        publishedDate
+        updatedDate
+        timeToRead
+        wordCount
+        canonicalUrl
       }
     }
   }

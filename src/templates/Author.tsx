@@ -6,7 +6,7 @@ import { toUrl } from 'gatsby-source-gravatar';
 import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';
-import { BlogPostItem, Person } from '../components/types';
+import { BlogPost, Person } from '../components/types';
 import PersonSchemaMarkup from '../components/Seo/PersonSchemaMarkup';
 import PostList from '../components/PostList';
 
@@ -14,7 +14,7 @@ interface AuthorTemplateProps {
   data: {
     person: Person;
     allBlogPost: {
-      nodes: BlogPostItem[];
+      nodes: BlogPost[];
     };
   };
 }
@@ -27,7 +27,7 @@ const StyledAuthorSection = styled.section`
   display: flex;
   flex-direction: column;
 
-  .info {
+  .author-info {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 1em;
@@ -58,8 +58,15 @@ const StyledAuthorSection = styled.section`
 `;
 
 const AuthorTemplate: FC<AuthorTemplateProps> = ({ data }) => {
-  const { name, email, twitterUrl, linkedInUrl, facebookUrl, description } =
-    data.person;
+  const {
+    name,
+    email,
+    twitterUrl,
+    linkedInUrl,
+    facebookUrl,
+    description,
+    descriptionExcerpt,
+  } = data.person;
 
   const latestBlogPosts = data.allBlogPost.nodes;
 
@@ -67,10 +74,10 @@ const AuthorTemplate: FC<AuthorTemplateProps> = ({ data }) => {
 
   return (
     <Layout>
-      <Seo title={name} description={description} />
+      <Seo title={name} description={descriptionExcerpt} />
       <PersonSchemaMarkup author={data.person} />
       <StyledAuthorSection>
-        <article className="info container">
+        <article className="author-info container">
           <StyledGravatar
             src={gravatarUrl}
             alt={`${name}'s gravatar`}
@@ -125,6 +132,7 @@ export const pageQuery = graphql`
       linkedInUrl
       facebookUrl
       description
+      descriptionExcerpt
     }
     allBlogPost(
       filter: {
@@ -135,17 +143,30 @@ export const pageQuery = graphql`
       sort: { fields: publishedDate, order: DESC }
     ) {
       nodes {
-        title
-        slug
-        category
-        timeToRead
-        description
-        publishedDate
-        updatedDate
         authors {
+          email
           name
           slug
+          canonicalUrl
+          homepageUrl
+          twitterUrl
+          linkedInUrl
+          facebookUrl
         }
+        body
+        internalContent
+        slug
+        title
+        description
+        category
+        tags
+        # publishedDate(formatString: "MMMM DD,YYYY")
+        # updatedDate(formatString: "MMMM DD,YYYY")
+        publishedDate
+        updatedDate
+        timeToRead
+        wordCount
+        canonicalUrl
       }
     }
   }

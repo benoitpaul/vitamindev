@@ -2,10 +2,10 @@ import { Link } from 'gatsby';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import PostAuthorList from './PostAuthorList';
-import { BlogPostItem } from './types';
+import { BlogPost } from './types';
 
 interface PostListProps {
-  posts: BlogPostItem[];
+  posts: BlogPost[];
   hideCategory?: boolean;
 }
 
@@ -43,7 +43,7 @@ const ListStyled = styled.ul`
     margin-bottom: 0.5em;
   }
 
-  .info {
+  .post-info {
     display: flex;
     gap: 0.25em;
 
@@ -68,7 +68,7 @@ const PostList: FC<PostListProps> = ({ posts, hideCategory }) => {
                 <h2>{post.title}</h2>
               </Link>
               <p>{post.description}</p>
-              <section className="info">
+              <section className="post-info">
                 <PostAuthorList authors={post.authors} />/
                 <time dateTime={postDate}>{postDate}</time>
               </section>

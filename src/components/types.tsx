@@ -20,9 +20,18 @@ export interface Person {
   linkedInUrl?: string;
   facebookUrl?: string;
   description: string;
+  descriptionExcerpt: string;
 }
 
 export type Author = Omit<Person, 'bio'>;
+
+export interface Category {
+  name: string;
+  slug: string;
+  canonicalUrl: string;
+  description: string;
+  descriptionExcerpt: string;
+}
 
 export interface BlogPost {
   id: string;
@@ -41,16 +50,25 @@ export interface BlogPost {
   internalContent: string;
 }
 
-export interface BlogPostItem {
-  title: string;
-  slug: string;
-  category: string;
-  timeToRead: number;
-  description: string;
-  publishedDate: string;
-  updatedDate?: string;
-  authors: {
-    name: string;
-    slug: string;
-  }[];
-}
+// export interface BlogPostItem {
+//   canonicalUrl: string;
+//   title: string;
+//   slug: string;
+//   category: string;
+//   timeToRead: number;
+//   wordCount: number;
+//   description: string;
+//   publishedDate: string;
+//   updatedDate?: string;
+//   authors: {
+//     name: string;
+//     slug: string;
+//   }[];
+// }
+
+// export interface BlogPostItemCollection {
+//   name: string;
+//   canonicalUrl: string;
+//   description: string;
+//   items: BlogPostItem[];
+// }

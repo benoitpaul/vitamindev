@@ -198,7 +198,16 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         slug: { type: 'String!' },
         logoUrl: { type: 'String' },
         logoImage: { type: 'File' },
-        body: {
+        canonicalUrl: {
+          type: 'String!',
+          resolve: (source, args, context, info) => {
+            const { siteUrl } = context.nodeModel.getAllNodes({
+              type: 'Site',
+            })[0].siteMetadata;
+            return `${siteUrl}/${source.slug}/`;
+          },
+        },
+        description: {
           type: 'String!',
           resolve(source, args, context, info) {
             const type = info.schema.getType(`Mdx`);
@@ -209,6 +218,26 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             return resolver(mdxNode, {}, context, {
               fieldName: 'body',
             });
+          },
+        },
+        descriptionExcerpt: {
+          type: 'String!',
+          resolve(source, args, context, info) {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            const resolver = type.getFields()['excerpt'].resolve;
+            return resolver(
+              mdxNode,
+              {
+                pruneLength: 1000,
+              },
+              context,
+              {
+                fieldName: 'excerpt',
+              }
+            );
           },
         },
       },
@@ -247,6 +276,26 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             return resolver(mdxNode, {}, context, {
               fieldName: 'body',
             });
+          },
+        },
+        descriptionExcerpt: {
+          type: 'String!',
+          resolve(source, args, context, info) {
+            const type = info.schema.getType(`Mdx`);
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            const resolver = type.getFields()['excerpt'].resolve;
+            return resolver(
+              mdxNode,
+              {
+                pruneLength: 1000,
+              },
+              context,
+              {
+                fieldName: 'excerpt',
+              }
+            );
           },
         },
       },
