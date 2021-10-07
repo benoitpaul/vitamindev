@@ -1,44 +1,49 @@
-export type JsonLdPerson = {
-  '@type': 'Person';
+export interface JsonLdThing {
+  '@context': 'https://schema.org';
+  '@type': string;
+  '@id': string;
   name: string;
+  description?: string;
+  url: string;
+  image?: string;
+  sameAs?: string[];
+  mainEntityOfPage?: string | JsonLdCreativeWork;
+}
+
+export interface JsonLdPerson extends JsonLdThing {
   // givenName: string;
   // familyName: string;
   email: string;
-  url: string;
-  sameAs: string[];
-};
+}
 
-export type JsonLdOrganization = {
-  '@context': 'https://schema.org';
-  '@type': 'Organization';
-  url: string;
-  name: string;
-  description: string;
+export interface JsonLdOrganization extends JsonLdThing {
   logo?: string;
-  sameAs: string[];
-};
+}
 
-export type JsonLdBlogPosting = {
-  '@context': 'http://schema.org';
-  '@type': 'BlogPosting';
-  image?: string;
-  url: string;
-  mainEntityOfPage?: string;
+export interface JsonLdCreativeWork extends JsonLdThing {
   headline: string;
-  name: string;
-  description: string;
-  datePublished: Date;
-  dateModified: Date;
-  author?: JsonLdPerson[];
-  publisher?: JsonLdOrganization;
-  articleSection: string;
-  articleBody: string;
+  datePublished?: Date;
+  dateModified?: Date;
+  author?: (JsonLdPerson | JsonLdOrganization)[];
+  publisher?: JsonLdPerson | JsonLdOrganization;
+  hasPart?: JsonLdCreativeWork[];
+  mainEntity?: JsonLdThing;
+}
+
+export interface JsonLdWebPage extends JsonLdCreativeWork {
+  breadcrumb?: string;
+}
+
+export interface JsonLdBlogPosting extends JsonLdCreativeWork {
+  articleSection?: string;
+  articleBody?: string;
   wordCount?: number;
   timeRequired?: string;
-};
+}
 
-export type JsonLdProfilePage = {
-  '@context': 'http://schema.org';
-  '@type': 'ProfilePage';
-  mainEntity: JsonLdPerson;
-};
+// export type JsonLdProfilePage = {
+//   '@context': 'http://schema.org';
+//   '@type': 'ProfilePage';
+//   '@id': string;
+//   mainEntity: JsonLdPerson;
+// };
