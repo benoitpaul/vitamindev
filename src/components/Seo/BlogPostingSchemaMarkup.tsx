@@ -2,7 +2,12 @@ import React, { FC } from 'react';
 import { Helmet } from 'react-helmet';
 import useSiteMetadata from '../../hooks/useSiteMetadata';
 import { BlogPost } from '../types';
-import { createJsonLdBlogPostingMetadata } from './utils';
+import { JsonLdBlogPosting } from './types';
+import {
+  createJsonLdBlogPostingMetadata,
+  createJsonLdBreadcrumbListMetadata,
+  createJsonLdWebPageBlogPostingMetadata,
+} from './utils';
 
 interface BlogPostingSchemaMarkupProps {
   blogPost: BlogPost;
@@ -12,7 +17,18 @@ const BlogPostingSchemaMarkup: FC<BlogPostingSchemaMarkupProps> = ({
   blogPost,
 }) => {
   const siteMetadata = useSiteMetadata();
-  const jsonLd = createJsonLdBlogPostingMetadata(blogPost, siteMetadata);
+  const jsonLdBlogPosting: JsonLdBlogPosting = createJsonLdBlogPostingMetadata(
+    blogPost,
+    siteMetadata
+  );
+  const jsonLdBreadcrumb = createJsonLdBreadcrumbListMetadata(
+    blogPost,
+    siteMetadata
+  );
+  const jsonLd = createJsonLdWebPageBlogPostingMetadata(
+    jsonLdBlogPosting,
+    jsonLdBreadcrumb
+  );
   return (
     <>
       <Helmet>

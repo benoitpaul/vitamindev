@@ -2,9 +2,9 @@ export interface JsonLdThing {
   '@context': 'https://schema.org';
   '@type': string;
   '@id': string;
-  name: string;
+  name?: string;
   description?: string;
-  url: string;
+  url?: string;
   image?: string;
   sameAs?: string[];
   mainEntityOfPage?: string | JsonLdCreativeWork;
@@ -31,7 +31,7 @@ export interface JsonLdCreativeWork extends JsonLdThing {
 }
 
 export interface JsonLdWebPage extends JsonLdCreativeWork {
-  breadcrumb?: string;
+  breadcrumb?: JsonLdBreadcrumbList;
 }
 
 export interface JsonLdBlogPosting extends JsonLdCreativeWork {
@@ -47,3 +47,12 @@ export interface JsonLdBlogPosting extends JsonLdCreativeWork {
 //   '@id': string;
 //   mainEntity: JsonLdPerson;
 // };
+
+export interface JsonLdBreadcrumbListItem extends JsonLdThing {
+  position: number;
+  item: string;
+}
+
+export interface JsonLdBreadcrumbList extends JsonLdThing {
+  itemListElement: JsonLdBreadcrumbListItem[];
+}

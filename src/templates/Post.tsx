@@ -7,6 +7,8 @@ import Seo from '../components/Seo';
 import TagList from '../components/TagList';
 import BlogPostingSchemaMarkup from '../components/Seo/BlogPostingSchemaMarkup';
 import { BlogPost } from '../components/types';
+import Breadcrumb from '../components/Breadcrumb';
+import useSiteMetadata from '../hooks/useSiteMetadata';
 
 interface Author {
   name: string;
@@ -57,6 +59,7 @@ const AuthorsListStyled = styled.ul`
 `;
 
 const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
+  const siteMetadata = useSiteMetadata();
   const {
     title,
     category,
@@ -70,15 +73,26 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
     body,
   } = data.blogPost;
   const postDate = updatedDate || publishedDate;
+  const breadcrumbList = [
+    {
+      name: siteMetadata.title,
+      path: '/',
+    },
+    {
+      name: category,
+      path: `/${category}/`,
+    },
+  ];
   return (
     <Layout>
       <Seo title={title} description={description} />
       <BlogPostingSchemaMarkup blogPost={data.blogPost} />
 
       <ArticleStyled>
-        <section className="category">
+        <Breadcrumb items={breadcrumbList} />
+        {/* <section className="category">
           <Link to={`/${category}/`}>{category}</Link>
-        </section>
+        </section> */}
         <h1>{title}</h1>
         <PostInfoSectionStyled>
           <div className="left">

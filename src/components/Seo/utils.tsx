@@ -5,6 +5,7 @@ import {
   JsonLdBlogPosting,
   JsonLdOrganization,
   JsonLdWebPage,
+  JsonLdBreadcrumbList,
 } from './types';
 
 export const createJsonLdOrganizationMetadata = (
@@ -89,10 +90,6 @@ export const createJsonLdBlogPostingMetadata = (
       createJsonLdPersonMetadata(author)
     ),
     publisher: createJsonLdOrganizationMetadata(siteMetadata),
-    // articleSection: blogPost.category,
-    // articleBody: removeMd(blogPost.internalContent),
-    // wordCount: blogPost.wordCount,
-    // timeRequired: `PT${blogPost.timeToRead}M`,
   };
 
   if (!isPart) {
@@ -104,6 +101,57 @@ export const createJsonLdBlogPostingMetadata = (
       timeRequired: `PT${blogPost.timeToRead}M`,
     };
   }
+  return jsonLd;
+};
+
+export const createJsonLdBreadcrumbListMetadata = (
+  blogPost: BlogPost,
+  siteMetadata: SiteMetadata
+): JsonLdBreadcrumbList => {
+  const { canonicalUrl, title, category } = blogPost;
+  const jsonLd: JsonLdBreadcrumbList = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl}#BreadcrumbList`,
+    url: canonicalUrl,
+    name: `${title} BreadcrumbList`,
+    itemListElement: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ListItem',
+        '@id': `${siteMetadata.siteUrl}/#ListItem`,
+        name: siteMetadata.title,
+        item: `${siteMetadata.siteUrl}/`,
+        position: 1,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ListItem',
+        '@id': `${siteMetadata.siteUrl}/${category}/#ListItem`,
+        name: category,
+        item: `${siteMetadata.siteUrl}/${category}/`,
+        position: 2,
+      },
+    ],
+  };
+  return jsonLd;
+};
+
+export const createJsonLdWebPageBlogPostingMetadata = (
+  jsonLdBLogPosting: JsonLdBlogPosting,
+  breadcrumb: JsonLdBreadcrumbList
+): JsonLdWebPage => {
+  const { headline, name, url } = jsonLdBLogPosting;
+  const jsonLd: JsonLdWebPage = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${url as string}#WebPage`,
+    headline,
+    name,
+    url,
+    mainEntity: jsonLdBLogPosting,
+    breadcrumb,
+  };
   return jsonLd;
 };
 
