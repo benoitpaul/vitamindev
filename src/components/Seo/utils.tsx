@@ -95,7 +95,7 @@ export const createJsonLdBlogPostingMetadata = (
   if (!isPart) {
     jsonLd = {
       ...jsonLd,
-      articleSection: blogPost.category,
+      articleSection: blogPost.categoryName,
       articleBody: removeMd(blogPost.internalContent),
       wordCount: blogPost.wordCount,
       timeRequired: `PT${blogPost.timeToRead}M`,
@@ -108,7 +108,7 @@ export const createJsonLdBreadcrumbListMetadata = (
   blogPost: BlogPost,
   siteMetadata: SiteMetadata
 ): JsonLdBreadcrumbList => {
-  const { canonicalUrl, title, category } = blogPost;
+  const { canonicalUrl, title, categoryName, categorySlug } = blogPost;
   const jsonLd: JsonLdBreadcrumbList = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -127,9 +127,9 @@ export const createJsonLdBreadcrumbListMetadata = (
       {
         '@context': 'https://schema.org',
         '@type': 'ListItem',
-        '@id': `${siteMetadata.siteUrl}/${category}/#ListItem`,
-        name: category,
-        item: `${siteMetadata.siteUrl}/${category}/`,
+        '@id': `${siteMetadata.siteUrl}/${categorySlug}/#ListItem`,
+        name: categoryName,
+        item: `${siteMetadata.siteUrl}/${categorySlug}/`,
         position: 2,
       },
     ],

@@ -6,7 +6,7 @@ interface TagListProps {
   tags: string[];
 }
 
-const ListStyled = styled.ul`
+const StyledList = styled.ul`
   display: flex;
   gap: 0.75em;
   flex-wrap: wrap;
@@ -19,7 +19,7 @@ const ListStyled = styled.ul`
   list-style-type: none;
 `;
 
-const LinkStyled = styled(Link)`
+const StyledLink = styled(Link)`
   display: inline-block;
   padding: 0.5em 1em;
 
@@ -38,13 +38,13 @@ const LinkStyled = styled(Link)`
 
 const TagList: FC<TagListProps> = ({ tags }) => {
   return (
-    <ListStyled>
+    <StyledList>
       {tags.map((tag) => (
         <li key={tag}>
-          <LinkStyled to={`/tags/${tag}`}>{tag}</LinkStyled>
+          <StyledLink to={`/tags/${tag}`}>{tag}</StyledLink>
         </li>
       ))}
-    </ListStyled>
+    </StyledList>
   );
 };
 

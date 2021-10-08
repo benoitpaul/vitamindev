@@ -9,7 +9,7 @@ interface PostAuthorListProps {
   authors: AuthorItem[];
 }
 
-const ListStyled = styled.ul`
+const StyledList = styled.ul`
   display: flex;
   margin: 0;
   padding: 0;
@@ -20,13 +20,13 @@ const ListStyled = styled.ul`
 
 const PostAuthorList: FC<PostAuthorListProps> = ({ authors }) => {
   return (
-    <ListStyled>
+    <StyledList>
       {authors?.map((author) => (
         <li key={author.slug}>
           <Link to={`/author/${author.slug}/`}>{author.name}</Link>
         </li>
       ))}
-    </ListStyled>
+    </StyledList>
   );
 };
 
