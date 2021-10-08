@@ -22,11 +22,11 @@ interface Categories {
   };
 }
 
-interface NavStyledProps {
+interface StyledNavProps {
   isMenuOpen: boolean;
 }
 
-const NavStyled = styled.nav<NavStyledProps>`
+const StyledNav = styled.nav<StyledNavProps>`
   position: relative;
   display: flex;
 
@@ -36,7 +36,7 @@ const NavStyled = styled.nav<NavStyledProps>`
   background: var(--color-primary-400);
 `;
 
-const MenuBarStyled = styled.section`
+const StyledMenuBar = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,7 +54,7 @@ const MenuBarStyled = styled.section`
   }
 `;
 
-const DesktopMenuStyled = styled.section`
+const StyledDesktopMenu = styled.section`
   display: none;
   @media only screen and (min-width: 42rem) {
     display: block;
@@ -74,11 +74,11 @@ const DesktopMenuStyled = styled.section`
   }
 `;
 
-interface MobileMenuStyledProps {
+interface StyledMobileMenuProps {
   isMenuOpen: boolean;
 }
 
-const MobileMenuStyled = styled.section<MobileMenuStyledProps>`
+const StyledMobileMenu = styled.section<StyledMobileMenuProps>`
   flex: 1;
   width: 100%;
   visibility: ${(props) => (props.isMenuOpen ? 'visible' : 'hidden')};
@@ -140,8 +140,8 @@ const Header: FC<HeaderProps> = ({
 
   return (
     <header>
-      <NavStyled isMenuOpen={isMenuOpen}>
-        <MenuBarStyled>
+      <StyledNav isMenuOpen={isMenuOpen}>
+        <StyledMenuBar>
           <Link to="/" className="home-link">
             {siteTitle}
           </Link>
@@ -162,7 +162,7 @@ const Header: FC<HeaderProps> = ({
               <ScreenReaderOnly>Click to toggle menu</ScreenReaderOnly>
             </>
           </StyledSvgButton> */}
-          <DesktopMenuStyled>
+          <StyledDesktopMenu>
             <ul>
               {categories.map(({ name, slug }) => {
                 return (
@@ -172,9 +172,9 @@ const Header: FC<HeaderProps> = ({
                 );
               })}
             </ul>
-          </DesktopMenuStyled>
-        </MenuBarStyled>
-        <MobileMenuStyled isMenuOpen={isMenuOpen}>
+          </StyledDesktopMenu>
+        </StyledMenuBar>
+        <StyledMobileMenu isMenuOpen={isMenuOpen}>
           <ul>
             {categories.map(({ name, slug }, index) => {
               return (
@@ -189,8 +189,8 @@ const Header: FC<HeaderProps> = ({
               );
             })}
           </ul>
-        </MobileMenuStyled>
-      </NavStyled>
+        </StyledMobileMenu>
+      </StyledNav>
     </header>
   );
 };

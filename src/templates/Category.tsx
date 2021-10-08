@@ -63,7 +63,7 @@ export const pageQuery = graphql`
       }
     }
     allBlogPost(
-      filter: { category: { eq: $slug }, publishedDate: { ne: null } }
+      filter: { categorySlug: { eq: $slug }, publishedDate: { ne: null } }
     ) {
       nodes {
         authors {
@@ -81,7 +81,8 @@ export const pageQuery = graphql`
         slug
         title
         description
-        category
+        categoryName
+        categorySlug
         tags
         # publishedDate(formatString: "MMMM DD,YYYY")
         # updatedDate(formatString: "MMMM DD,YYYY")

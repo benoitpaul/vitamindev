@@ -8,7 +8,7 @@ const createBlogPostPages = async ({ graphql, actions }) => {
       allBlogPost(filter: { publishedDate: { ne: null } }) {
         nodes {
           slug
-          category
+          categorySlug
         }
       }
     }
@@ -22,7 +22,7 @@ const createBlogPostPages = async ({ graphql, actions }) => {
   const blogPosts = data.allBlogPost.nodes;
   blogPosts.forEach((post) => {
     actions.createPage({
-      path: `/${post.category}/${post.slug}/`,
+      path: `/${post.categorySlug}/${post.slug}/`,
       component: blogPostTemplate,
       context: {
         slug: post.slug,
@@ -114,7 +114,22 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
         title: { type: 'String!' },
         slug: { type: 'String!' },
         description: { type: 'String!' },
-        category: { type: 'String!' },
+        categorySlug: { type: 'String!' },
+        categoryName: {
+          type: 'String!',
+          resolve: (source, args, context, info) => {
+            const mdxNode = context.nodeModel.getNodeById({
+              id: source.parent,
+            });
+            return context.nodeModel
+              .getAllNodes({
+                type: 'Category',
+              })
+              .find(
+                (category) => mdxNode.frontmatter.category === category.slug
+              ).name;
+          },
+        },
         tags: { type: '[String!]!' },
         authors: {
           type: '[Person!]!',
@@ -324,7 +339,7 @@ exports.onCreateNode = async ({
           title: node.frontmatter.title,
           slug: node.frontmatter.slug,
           description: node.frontmatter.description,
-          category: node.frontmatter.category,
+          categorySlug: node.frontmatter.category,
           tags: node.frontmatter.tags,
           authors: node.frontmatter.authors,
           publishedDate: node.frontmatter.publishedDate,

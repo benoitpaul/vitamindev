@@ -14,7 +14,8 @@ const LatestBlogPosts: FC = () => {
         nodes {
           title
           slug
-          category
+          categoryName
+          categorySlug
           timeToRead
           description
           authors {

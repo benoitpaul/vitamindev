@@ -39,7 +39,8 @@ export interface BlogPost {
   title: string;
   slug: string;
   description: string;
-  category: string;
+  categoryName: string;
+  categorySlug: string;
   tags: string[];
   authors: Author[];
   publishedDate: string;

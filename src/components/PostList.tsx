@@ -9,7 +9,7 @@ interface PostListProps {
   hideCategory?: boolean;
 }
 
-const ListStyled = styled.ul`
+const StyledList = styled.ul`
   display: grid;
   // grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   grid-template-columns: 1fr;
@@ -39,7 +39,7 @@ const ListStyled = styled.ul`
 
   .category a {
     display: inline-block;
-    text-transform: uppercase;
+    // text-transform: uppercase;
     margin-bottom: 0.5em;
   }
 
@@ -53,7 +53,7 @@ const ListStyled = styled.ul`
 
 const PostList: FC<PostListProps> = ({ posts, hideCategory }) => {
   return (
-    <ListStyled>
+    <StyledList>
       {posts?.map((post) => {
         const postDate = post.updatedDate || post.publishedDate;
         return (
@@ -61,10 +61,10 @@ const PostList: FC<PostListProps> = ({ posts, hideCategory }) => {
             <article>
               {!hideCategory && (
                 <section className="category">
-                  <Link to={`/${post.category}/`}>{post.category}</Link>
+                  <Link to={`/${post.categorySlug}/`}>{post.categoryName}</Link>
                 </section>
               )}
-              <Link to={`/${post.category}/${post.slug}/`}>
+              <Link to={`/${post.categorySlug}/${post.slug}/`}>
                 <h2>{post.title}</h2>
               </Link>
               <p>{post.description}</p>
@@ -76,7 +76,7 @@ const PostList: FC<PostListProps> = ({ posts, hideCategory }) => {
           </li>
         );
       })}
-    </ListStyled>
+    </StyledList>
   );
 };
 
