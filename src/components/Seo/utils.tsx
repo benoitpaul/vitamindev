@@ -155,6 +155,26 @@ export const createJsonLdWebPageBlogPostingMetadata = (
   return jsonLd;
 };
 
+export const createJsonLdAboutPageMetadata = ({
+  name,
+  url,
+  siteMetadata,
+}: {
+  name: string;
+  url: string;
+  siteMetadata: SiteMetadata;
+}): JsonLdWebPage => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    '@id': `${url}#AboutPage`,
+    url,
+    name,
+    headline: name,
+    about: createJsonLdOrganizationMetadata(siteMetadata),
+  };
+};
+
 export const createJsonLdCategoryMetadata = (
   category: Category,
   blogPosts: BlogPost[],

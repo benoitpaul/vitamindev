@@ -4,7 +4,6 @@ import { MDXRenderer } from 'gatsby-plugin-mdx';
 import styled from 'styled-components';
 import Layout from '../components/Layout';
 import Seo from '../components/Seo';
-import TagList from '../components/TagList';
 import BlogPostingSchemaMarkup from '../components/Seo/BlogPostingSchemaMarkup';
 import { BlogPost } from '../components/types';
 import Breadcrumb from '../components/Breadcrumb';
@@ -66,7 +65,6 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
     categorySlug,
     categoryName,
     description,
-    tags,
     authors,
     publishedDate,
     updatedDate,
@@ -117,7 +115,7 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
             </div>
           </StyledPostInfoSection>
           <MDXRenderer>{body}</MDXRenderer>
-          <TagList tags={tags} />
+          {/* <TagList tags={tags} /> */}
         </StyledContainer>
       </StyledArticle>
     </Layout>
