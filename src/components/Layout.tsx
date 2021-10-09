@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Header from './Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import SkipLink from './SkipLink';
+import Footer from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
@@ -31,22 +32,6 @@ const StyledMain = styled.main`
   flex-direction: column;
 `;
 
-const StyledFooter = styled.footer`
-  padding: 2em 1em;
-
-  font-size: 1rem;
-  text-align: center;
-  background: var(--color-secondary-900);
-  color: white;
-
-  .copyright {
-    margin-bottom: 1em;
-  }
-  a {
-    color: white;
-  }
-`;
-
 const Layout: FC<LayoutProps> = ({ children }) => {
   const data: SiteProps = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -64,8 +49,6 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const fullYear = new Date().getFullYear().toString();
-
   return (
     <>
       <GlobalStyle />
@@ -80,12 +63,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         <StyledMain id="main-content" tabIndex={-1}>
           {children}
         </StyledMain>
-        <StyledFooter>
-          <section className="copyright">
-            ©<time dateTime={fullYear}>{fullYear}</time> Vitamin Dev
-          </section>
-          <a href="https://www.benoitpaul.com">Benoit Paul</a>
-        </StyledFooter>
+        <Footer />
       </LayoutGrid>
     </>
   );

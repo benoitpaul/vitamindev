@@ -75,6 +75,7 @@ const GlobalStyle = createGlobalStyle`
     --color-background-02: var(--color-neutral-50);
     --color-heading: var(--color-neutral-900); 
     --color-text: var(--color-neutral-800);
+    --color-text-inverse: var(--color-neutral-50);
     --color-link: var(--color-secondary-900);
     --color-border: rgba(0,0,0,0.1);
   }

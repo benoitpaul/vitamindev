@@ -28,6 +28,7 @@ export interface JsonLdCreativeWork extends JsonLdThing {
   publisher?: JsonLdPerson | JsonLdOrganization;
   hasPart?: JsonLdCreativeWork[];
   mainEntity?: JsonLdThing;
+  about?: JsonLdThing;
 }
 
 export interface JsonLdWebPage extends JsonLdCreativeWork {
