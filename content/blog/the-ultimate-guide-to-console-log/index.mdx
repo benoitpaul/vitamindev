@@ -297,7 +297,7 @@ try {
 
 **To log a stack trace within a function, use the `console.trace()` method.**
 
-```javascript
+```javascript {numberLines}
 const bar = () => {
   console.trace('trace bar()');
 };
@@ -321,7 +321,7 @@ You can click on any function call of the call stack to view the corresponding l
 
 You can add a log to the console depending on a condition using an assertion. **In order to log an assertion, use the `console.assert` method.**
 
-```javascript
+```javascript {numberLines}
 const bar = () => {
   console.assert(false, 'assert is called');
   console.log('this code is still executed');
@@ -432,7 +432,7 @@ The console log for this simple program is a bit of a mess:
 
 You can make your logs more readable by grouping related logs. **To group logs together, wrap the logs between `console.group` and `console.groupEnd` statements.**
 
-```javascript
+```javascript {numberLines}
 console.group();
 console.log('introducing the players...');
 const players = ['player 1', 'player 2', 'player 3', 'player 4'];
@@ -473,7 +473,7 @@ Lines 12 and 28 demonstrates another property groups: they can be nested. Each m
 
 Noticed how each group is named `console.group`? While this is helpful to group logs together, it does not tell much about what the group is about.
 
-**To name a console log group, use the `label` property of `console.group` and c`onsole.groupEnd` functions.**
+**To name a console log group, use the `label` property of `console.group` and `console.groupEnd` functions.**
 
 ```javascript
 console.clear();
@@ -515,7 +515,7 @@ This is much better already! There is one last improvement we can do to this cod
 
 **To hide a console log group by default, use `console.groupCollapsed` instead of `console.group`.** You can always expand this group later on.
 
-```javascript
+```javascript {numberLines}
 console.group('introducing the players');
 const players = ['player 1', 'player 2', 'player 3', 'player 4'];
 players.forEach((player) => {
@@ -683,4 +683,3 @@ Here is a table of all severity level for each console method:
 | console.timeEnd | Info           |
 | console.trace   | info           |
 | console.warn    | Warning        |
-|                 |                |

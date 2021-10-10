@@ -73,6 +73,7 @@ const GlobalStyle = createGlobalStyle`
     // design tokens here
     --color-background-01: #ffffff;
     --color-background-02: var(--color-neutral-50);
+    --color-background-code: var(--color-neutral-100);
     --color-heading: var(--color-neutral-900); 
     --color-text: var(--color-neutral-800);
     --color-text-inverse: var(--color-neutral-50);
@@ -183,9 +184,16 @@ const GlobalStyle = createGlobalStyle`
     word-break: break-word;
   }
 
-  /* tbody tr:nth-child(odd) {
-    background-color: var(--dark-opacity);
-  } */
+  tbody tr:nth-child(odd) {
+    background-color: var(--color-background-02);
+  } 
+
+  ::selection {
+    color: var(--color-text);
+    background: var(--color-primary-400);
+    // color: var(--color-text-inverse);
+    // background: var(--color-secondary-600);
+  }
 
   .container {
     width: 100%;
@@ -209,6 +217,10 @@ const GlobalStyle = createGlobalStyle`
     h2, h3 {
       font-family: "InterVariable", sans-serif;
       font-variation-settings: "wght" 600; 
+    }
+
+    strong {
+      font-variation-settings: "wght" 700; 
     }
 
     em,

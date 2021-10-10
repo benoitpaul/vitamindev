@@ -30,6 +30,21 @@ const StyledArticle = styled.article`
     margin-top: 1rem;
   }
 
+  h2,
+  h3 {
+    margin: 3rem 0 0.5rem;
+  }
+
+  code:not(.grvsc-code) {
+    padding: 0.25em 0.5em;
+    font-size: 0.9em;
+    font-weight: inherit;
+    letter-spacing: -0.5px;
+
+    background: var(--color-background-code);
+    border-radius: 4px;
+  }
+
   .category a {
     display: inline-block;
     text-transform: uppercase;
