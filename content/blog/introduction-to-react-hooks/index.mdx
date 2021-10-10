@@ -42,7 +42,7 @@ Before React hooks, if you wanted to manage state, use side effects (like callin
 
 Let's take this component for example:
 
-```javascript
+```javascript {numberLines}
 import React, { Component } from 'react';
 import Axios from 'axios';
 import source$ from './source';
@@ -162,7 +162,7 @@ Notice how these pieces of logic are spread everywhere in the class? This is bec
 
 What if you want to reuse each functionality for different components? A common workaround to this problem is to use Higher-Order Component (HOC):
 
-```javascript
+```javascript {numberLines}
 import Axios from 'axios';
 import React, { Component } from 'react';
 import source$ from './source';

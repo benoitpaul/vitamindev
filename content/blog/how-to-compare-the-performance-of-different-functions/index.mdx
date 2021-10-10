@@ -43,7 +43,7 @@ const isPrimeFaster = (n) => {
 
 To compare the performance of these implementations, you can create a function that'll accept any number of functions as arguments. This function will execute and time each function argument is it passed.
 
-```javascript
+```javascript {numberLines}
 const runPrimePerformance = (...arguments) => {
     for (var i=0; i < arguments.length; i++) {
         console.time(arguments[i].name);
