@@ -35,6 +35,28 @@ const StyledArticle = styled.article`
     margin: 3rem 0 0.5rem;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    .hash-anchor {
+      position: absolute;
+      transform: translateX(-150%);
+      color: var(--color-neutral-500);
+      opacity: 0;
+
+      &:focus {
+        opacity: 1;
+      }
+    }
+
+    &:hover .hash-anchor {
+      opacity: 1;
+    }
+  }
+
   code:not(.grvsc-code) {
     padding: 0.25em 0.5em;
     font-size: 0.9em;

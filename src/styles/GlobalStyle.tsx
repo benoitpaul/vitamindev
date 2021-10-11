@@ -202,7 +202,6 @@ const GlobalStyle = createGlobalStyle`
     margin-right: auto;
   }
 
-
   @supports (font-variation-settings: normal) {
     body {
       font-family: "InterVariable";
