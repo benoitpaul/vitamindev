@@ -10,7 +10,6 @@ module.exports = {
   plugins: [
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-image`,
-    `gatsby-plugin-sitemap`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -101,6 +100,16 @@ module.exports = {
         // Required.
         // A list of emails to create URLs for.
         emails: [],
+      },
+    },
+    // SEO
+    `gatsby-plugin-sitemap`,
+    {
+      resolve: 'gatsby-plugin-google-tagmanager',
+      options: {
+        id: 'GTM-PJWHQP4',
+        includeInDevelopment: false,
+        enableWebVitalsTracking: true,
       },
     },
   ],
