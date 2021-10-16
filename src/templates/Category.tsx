@@ -7,6 +7,7 @@ import PostList from '../components/PostList';
 import { Category, BlogPost } from '../components/types';
 import Seo from '../components/Seo';
 import CategorySchemaMarkup from '../components/Seo/CategorySchemaMarkup';
+import CanonicalUrl from '../components/Seo/CanonicalUrl';
 
 interface BlogCategoryTemplateProps {
   data: {
@@ -33,6 +34,7 @@ const BlogCategoryTemplate: FC<BlogCategoryTemplateProps> = ({ data }) => {
         title={`${category.name} posts`}
         description={category.descriptionExcerpt}
       />
+      <CanonicalUrl url={category.canonicalUrl} />
       <CategorySchemaMarkup category={category} blogPosts={posts} />
       <StyledCategorySection>
         <div className="container">

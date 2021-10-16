@@ -9,6 +9,7 @@ import { BlogPost } from '../components/types';
 import Breadcrumb from '../components/Breadcrumb';
 import useSiteMetadata from '../hooks/useSiteMetadata';
 import StyledContainer from '../styles/StyledContainer';
+import CanonicalUrl from '../components/Seo/CanonicalUrl';
 
 interface Author {
   name: string;
@@ -72,6 +73,13 @@ const StyledArticle = styled.article`
     text-transform: uppercase;
     margin-bottom: 0.5em;
   }
+
+  .article-body {
+    ol,
+    ul {
+      line-height: var(--line-height);
+    }
+  }
 `;
 
 const StyledPostInfoSection = styled.section`
@@ -101,6 +109,7 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
     title,
     categorySlug,
     categoryName,
+    canonicalUrl,
     description,
     authors,
     publishedDate,
@@ -123,6 +132,7 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
   return (
     <Layout>
       <Seo title={title} description={description} />
+      <CanonicalUrl url={canonicalUrl} />
       <BlogPostingSchemaMarkup blogPost={data.blogPost} />
 
       <StyledArticle>
@@ -151,7 +161,9 @@ const BlogPostTemplate: FC<BlogPostTemplateProps> = ({ data }) => {
               <div>{wordCount} words</div>
             </div>
           </StyledPostInfoSection>
-          <MDXRenderer>{body}</MDXRenderer>
+          <section className="article-body">
+            <MDXRenderer>{body}</MDXRenderer>
+          </section>
           {/* <TagList tags={tags} /> */}
         </StyledContainer>
       </StyledArticle>

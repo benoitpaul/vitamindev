@@ -39,15 +39,15 @@ export class OrderProcessComponent {
 }
 ```
 
-```markup
-<div *ngIf="orderStatus === OrderStatus.Ordered">
-    Ordered
-</div>
+```html
+<div *ngIf="orderStatus === OrderStatus.Ordered">Ordered</div>
 ```
 
 The code above will not compile:
 
+```console
 error TS2339: Property 'OrderStatus' does not exist on type 'OrderProcessComponent'.
+```
 
 The problem is that the scope of the template is limited to the component instance members.
 

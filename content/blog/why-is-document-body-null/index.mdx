@@ -16,20 +16,20 @@ If you get the error _Uncaught TypeError: Cannot read property 'appendChild' of 
 
 Let's check this example:
 
-```markup
+```html
 <!DOCTYPE html>
 <html>
-<head>
-  <script type="text/javascript">
-    const p = document.createElement('p');
-    p.innerHTML = 'Lorem ipsum';
-    document.body.appendChild(p);
-  </script>
-  <title>Appending an element to body</title>
-</head>
-<body>
+  <head>
+    <script type="text/javascript">
+      const p = document.createElement('p');
+      p.innerHTML = 'Lorem ipsum';
+      document.body.appendChild(p);
+    </script>
+    <title>Appending an element to body</title>
+  </head>
+  <body>
     This is a text
-</body>
+  </body>
 </html>
 ```
 
@@ -37,40 +37,40 @@ Since the JavaScript code is executed _before_ the HTML body tag has loaded, `do
 
 Executing the code inside the `window.load` function fixes the problem:
 
-```markup
+```html
 <!DOCTYPE html>
 <html>
-<head>
-  <script type="text/javascript">
-    window.onload = () => {
+  <head>
+    <script type="text/javascript">
+      window.onload = () => {
         const p = document.createElement('p');
         p.innerHTML = 'Lorem ipsum';
         document.body.appendChild(p);
-    }
-  </script>
-  <title>Appending an element to body</title>
-</head>
-<body>
+      };
+    </script>
+    <title>Appending an element to body</title>
+  </head>
+  <body>
     This is a text
-</body>
+  </body>
 </html>
 ```
 
 Another option is to move the script at the end of the body tag, once it's been loaded:
 
-```javascript
+```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Appending an element to body</title>
-</head>
-<body>
+  <head>
+    <title>Appending an element to body</title>
+  </head>
+  <body>
     This is a text
     <script type="text/javascript">
-        const p = document.createElement('p');
-        p.innerHTML = 'Lorem ipsum';
-        document.body.appendChild(p);
-      </script>
-</body>
+      const p = document.createElement('p');
+      p.innerHTML = 'Lorem ipsum';
+      document.body.appendChild(p);
+    </script>
+  </body>
 </html>
 ```
