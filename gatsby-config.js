@@ -3,7 +3,7 @@ module.exports = {
     title: `VitaminDev`,
     description: `Learn React, Angular 2+, Javascript and CSS with bite sized, no fluff posts.`,
     author: `@benoitpaul`,
-    siteUrl: `https://vitamindev.com/`,
+    siteUrl: `https://www.vitamindev.com/`,
     twitterUrl: `https://twitter.com/vitamindevblog`,
     youtubeUrl: `https://www.youtube.com/channel/UCUvU9SoGYrUwNZyifWkQHNg`,
   },
@@ -153,7 +153,7 @@ module.exports = {
         ],
         custom_elements: [
           {
-            'atom:link href="https://vitamindev.com/rss.xml" rel="self" type="application/rss+xml"':
+            'atom:link href="https://www.vitamindev.com/rss.xml" rel="self" type="application/rss+xml"':
               null,
           },
         ],
