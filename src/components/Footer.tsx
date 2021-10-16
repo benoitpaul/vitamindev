@@ -55,6 +55,9 @@ const Footer: FC = () => {
           <li>
             <a href={siteMetadata.youtubeUrl}>Youtube</a>
           </li>
+          <li>
+            <Link to="/rss.xml">RSS</Link>
+          </li>
         </ul>
         <section className="copyright">
           ©<time dateTime={fullYear}>{fullYear}</time> VitaminDev. All Rights
