@@ -45,7 +45,6 @@ const StyledArticle = styled.article`
     .hash-anchor {
       position: absolute;
       transform: translateX(-150%);
-      color: var(--color-neutral-500);
       opacity: 0;
 
       &:focus {
