@@ -10,9 +10,9 @@ authors:
   - 'benoit.paul@gmail.com'
 ---
 
-In ngx-translate, if you want to safely use `.instant()`, you need to make sure the translations are loaded first. While [instant is synchronous, the default translation file loader is asynchronous](https://github.com/ngx-translate/core#methods).
+In ngx-translate, if you want to safely use `.instant`, you need to make sure the translations are loaded first. While [instant is synchronous, the default translation file loader is asynchronous](https://github.com/ngx-translate/core#methods).
 
-You can load the translations when the application starts via `.use()` in the ngOnInit of your AppComponent.
+You can load the translations when the application starts via `.use` in the `ngOnInit` of your AppComponent.
 
 ```typescript
 import { Component, OnInit } from '@angular/core';

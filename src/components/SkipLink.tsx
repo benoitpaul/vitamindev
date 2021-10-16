@@ -23,8 +23,8 @@ const StyledAnchor = styled.a`
     text-decoration: underline;
     text-align: center;
 
-    background: var(--color-secondary-900);
-    color: white;
+    background: var(--color-background-03);
+    color: var(--color-text-inverse);
   }
 `;
 

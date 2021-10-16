@@ -1,8 +1,6 @@
 import React, { CSSProperties, FC, useEffect } from 'react';
 import { graphql, Link, useStaticQuery } from 'gatsby';
 import styled from 'styled-components';
-// import IconMenu from '../icons/icon-menu.svg';
-// import IconClose from '../icons/icon-close.svg';
 import Hamburger from 'hamburger-react';
 // import ScreenReaderOnly from './ScreenReaderOnly';
 // import StyledSvgButton from './StyledSvgButton';
@@ -32,8 +30,6 @@ const StyledNav = styled.nav<StyledNavProps>`
 
   flex-direction: column;
   min-height: ${(props) => (props.isMenuOpen ? '100vh' : 'unset')};
-
-  background: var(--color-primary-400);
 `;
 
 const StyledMenuBar = styled.section`
@@ -45,7 +41,29 @@ const StyledMenuBar = styled.section`
   margin: 0 auto;
   padding: 1em;
 
-  color: var(--color-link);
+  color: var(--color-text);
+
+  a {
+    color: var(--color-text);
+    padding: 0.5em 0.75em;
+    border-radius: 4px;
+    box-shadow: none;
+
+    &:hover {
+      background: var(--color-background-02);
+      box-shadow: none;
+    }
+  }
+
+  .home-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    svg {
+      color: var(--color-yellow-400);
+    }
+  }
 
   @media only screen and (min-width: 42rem) {
     .hamburger-react {
@@ -66,7 +84,6 @@ const StyledDesktopMenu = styled.section`
   ul {
     display: flex;
     justify-content: flex-end;
-    gap: 1em;
 
     margin: 0;
     padding: 0;
@@ -112,7 +129,7 @@ const Header: FC<HeaderProps> = ({
     allCategory: { nodes: categories },
   }: Categories = useStaticQuery(graphql`
     query CategoriesQuery {
-      allCategory {
+      allCategory(sort: { fields: name }) {
         nodes {
           name
           slug
@@ -143,7 +160,7 @@ const Header: FC<HeaderProps> = ({
       <StyledNav isMenuOpen={isMenuOpen}>
         <StyledMenuBar>
           <Link to="/" className="home-link">
-            {siteTitle}
+            <span>{siteTitle}</span>
           </Link>
           <Hamburger
             label="Show menu"
@@ -167,7 +184,13 @@ const Header: FC<HeaderProps> = ({
               {categories.map(({ name, slug }) => {
                 return (
                   <li key={slug}>
-                    <Link to={`/${slug}/`}>{name}</Link>
+                    <Link
+                      to={`/${slug}/`}
+                      activeClassName="active-menu-item"
+                      partiallyActive
+                    >
+                      {name}
+                    </Link>
                   </li>
                 );
               })}

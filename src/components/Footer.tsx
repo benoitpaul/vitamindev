@@ -9,7 +9,7 @@ const StyledFooter = styled.footer`
 
   font-size: 1rem;
   line-height: 1.6em;
-  background: var(--color-secondary-900);
+  background: var(--color-background-03);
   color: var(--color-text-inverse);
 
   .sections {
@@ -57,7 +57,7 @@ const Footer: FC = () => {
           </li>
         </ul>
         <section className="copyright">
-          ©<time dateTime={fullYear}>{fullYear}</time> Vitamin Dev. All Rights
+          ©<time dateTime={fullYear}>{fullYear}</time> VitaminDev. All Rights
           Reserved.
         </section>
       </StyledContainer>

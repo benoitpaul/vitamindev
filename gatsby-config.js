@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Vitamin Dev`,
+    title: `VitaminDev`,
     description: `Learn React, Angular 2+, Javascript and CSS with bite sized, no fluff posts.`,
     author: `@benoitpaul`,
     siteUrl: `https://vitamindev.com/`,
@@ -43,13 +43,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `vitamin-dev`,
+        short_name: `vitamin-dev`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
+        background_color: `#ffffff`,
+        theme_color: `#ffffff`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        icon: `src/images/emoji-sun.png`, // This path is relative to the root of the site.
       },
     },
     {

@@ -21,7 +21,7 @@ const StyledList = styled.ul`
   article {
     display: flex;
     flex-direction: column;
-    padding: 2em 1em;
+    padding: 2em;
     border-radius: 8px;
 
     background: var(--color-background-01);
@@ -29,17 +29,21 @@ const StyledList = styled.ul`
     font-size: 1rem;
   }
 
-  a {
+  a.heading-link {
     text-decoration: none;
+    box-shadow: none;
 
     &:hover {
-      text-decoration: underline;
+      color: var(--color-link);
+
+      h2 {
+        color: inherit;
+      }
     }
   }
 
   .category a {
     display: inline-block;
-    // text-transform: uppercase;
     margin-bottom: 0.5em;
   }
 
@@ -64,7 +68,10 @@ const PostList: FC<PostListProps> = ({ posts, hideCategory }) => {
                   <Link to={`/${post.categorySlug}/`}>{post.categoryName}</Link>
                 </section>
               )}
-              <Link to={`/${post.categorySlug}/${post.slug}/`}>
+              <Link
+                className="heading-link"
+                to={`/${post.categorySlug}/${post.slug}/`}
+              >
                 <h2>{post.title}</h2>
               </Link>
               <p>{post.description}</p>

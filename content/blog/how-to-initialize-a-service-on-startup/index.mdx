@@ -212,7 +212,7 @@ export class ConfigurationService {
 
 ### 3- Create a logging service
 
-The `LoggingService` will log information to the console, if the option is turned on. The options is set via the `initialize()` function.
+The `LoggingService` will log information to the console, if the option is turned on. The options is set via the `initialize` function.
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -259,7 +259,7 @@ export function initServicesFactory(
 
 This is the glue that will make sure the ConfigurationService and LoggingService are properly initialized when the application starts.
 
-Notice that since `ConfigurationService` and `LoggingService` are expected parameters of the i`nitServicesFactory()` function, they are passed into the `deps` array.
+Notice that since `ConfigurationService` and `LoggingService` are expected parameters of the `initServicesFactory` function, they are passed into the `deps` array.
 
 ```typescript
 import { LoggingService } from './logging.service';

@@ -9,6 +9,7 @@ import Seo from '../components/Seo';
 import { BlogPost, Person } from '../components/types';
 import PersonSchemaMarkup from '../components/Seo/PersonSchemaMarkup';
 import PostList from '../components/PostList';
+import CanonicalUrl from '../components/Seo/CanonicalUrl';
 
 interface AuthorTemplateProps {
   data: {
@@ -61,6 +62,7 @@ const AuthorTemplate: FC<AuthorTemplateProps> = ({ data }) => {
   const {
     name,
     email,
+    canonicalUrl,
     twitterUrl,
     linkedInUrl,
     facebookUrl,
@@ -75,6 +77,7 @@ const AuthorTemplate: FC<AuthorTemplateProps> = ({ data }) => {
   return (
     <Layout>
       <Seo title={name} description={descriptionExcerpt} />
+      <CanonicalUrl url={canonicalUrl} />
       <PersonSchemaMarkup author={data.person} />
       <StyledAuthorSection>
         <article className="author-info container">

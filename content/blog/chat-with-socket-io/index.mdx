@@ -125,7 +125,7 @@ io.on('connection', (socket) => {
 Here is what happens in more details:
 
 1. We import the socket.io module and create a new socket object. the cors parameter is necessary to execute the code locally (the frontend runs on http://localhost:3000). For more details, check how to [handle cors](https://socket.io/docs/v3/handling-cors/).
-2. We define the NEW_CHAT_MESSAGE_EVENT constant. This is the event name the socket will listen to for new messages.
+2. We define the `NEW_CHAT_MESSAGE_EVENT` constant. This is the event name the socket will listen to for new messages.
 3. Upon a new connection, the socket will join the room requested.
 4. When the socket receives a new message, it will simply emit it to the room, so all socket clients of the same room will receive it
 5. When the socket is disconnected, it leaves the room.
@@ -138,7 +138,7 @@ Just like we did on the server, we need to import socket.io on the client:
 npm install --save socket.io
 ```
 
-To keep the code clean, we'll create a useChat React hook, that will contain all the logic necessary to run a chat room:
+To keep the code clean, we'll create a `useChat` React hook, that will contain all the logic necessary to run a chat room:
 
 ```javascript
 import { useEffect, useRef, useState } from 'react';
@@ -374,7 +374,7 @@ export default useChat;
 Here is what's new in the React hook:
 
 1. When the hook mounts we create a new user
-2. We keep track of all users in the chat room with a new useState hook.
+2. We keep track of all users in the chat room with a new `useState` hook.
    - When joining a room, we fetch the list of all users in the chat room
    - The socket listens for when a user joins or leave the chat room
 3. When sending the message, we send the user that sent the message, not just the body text.
@@ -435,7 +435,7 @@ app.get('/rooms/:roomId/messages', (req, res) => {
 
 ### Fetching the messages on the frontend
 
-Let's add an effect to the useChat hook, so that we fetch the message history when joining a room.
+Let's add an effect to the `useChat` hook, so that we fetch the message history when joining a room.
 
 ```javascript
 const useChat = (roomId) => {
@@ -466,7 +466,7 @@ const useChat = (roomId) => {
 export default useChat;
 ```
 
-Displaying when a user is typing
+## Displaying when a user is typing
 
 Most chat applications let you know when a user is typing a message, so let's do that.
 
@@ -503,7 +503,7 @@ Handling when a user starts and stops typing on the client
 
 When a user starts typing, we want to notify other users immediately. When the user stops typing we want to wait for 5 seconds before notifying, just in the case the user resumes typing.
 
-We'll create a useTyping React hook to handle this logic:
+We'll create a `useTyping` React hook to handle this logic:
 
 ```javascript
 import { useEffect, useState } from 'react';
@@ -550,7 +550,7 @@ const useTyping = () => {
 export default useTyping;
 ```
 
-Next we need to use the useTyping hook in useChat:
+Next we need to use the `useTyping` hook in useChat:
 
 ```javascript
 ...
