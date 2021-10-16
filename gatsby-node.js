@@ -108,7 +108,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             const { siteUrl } = context.nodeModel.getAllNodes({
               type: 'Site',
             })[0].siteMetadata;
-            return `${siteUrl}/${source.category}/${source.slug}/`;
+            return `${siteUrl}/${source.categorySlug}/${source.slug}/`;
           },
         },
         title: { type: 'String!' },

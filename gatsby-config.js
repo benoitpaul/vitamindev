@@ -102,6 +102,63 @@ module.exports = {
         emails: [],
       },
     },
+    {
+      resolve: `gatsby-plugin-feed`,
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [
+          {
+            serialize: ({ query: { allBlogPost } }) => {
+              return allBlogPost.nodes.map((node) => {
+                return Object.assign({}, node, {
+                  date: node.publishedDate,
+                  url: node.canonicalUrl,
+                  guid: node.canonicalUrl,
+                  author: node.authors[0].name,
+                });
+              });
+            },
+            query: `
+              {
+                allBlogPost(
+                  sort: {fields: publishedDate, order: DESC}
+                  filter: {publishedDate: {ne: null}}
+                ) {
+                  nodes {
+                    canonicalUrl
+                    description
+                    publishedDate
+                    title
+                    authors {
+                      name
+                    }
+                  }
+                }
+              }
+            `,
+            output: '/rss.xml',
+            title: 'VitaminDev | RSS Feed',
+          },
+        ],
+        custom_elements: [
+          {
+            'atom:link href="https://vitamindev.com/rss.xml" rel="self" type="application/rss+xml"':
+              null,
+          },
+        ],
+      },
+    },
     // SEO
     `gatsby-plugin-sitemap`,
     {
