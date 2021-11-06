@@ -1,0 +1,232 @@
+---
+title: 'How to use GetStaticProps and GetStaticPaths with TypeScript'
+slug: 'getstaticprops-getstaticpaths-typescript'
+description: 'Next.js and TypeScript works well out of the box.  Find out how to get the most of GetStaticProps and GetStaticPaths with TypeScript'
+publishedDate: '2021-11-06'
+category: 'next-js'
+tags:
+  - 'typescript'
+  - 'react'
+  - 'next.js'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+[Next.js and TypeScript](https://nextjs.org/docs/basic-features/typescript/) work well together out of the box.
+`getStaticProps` and `getStaticPaths` are the 2 functions used for Static Generation.
+How can we ensure type safety?
+
+TL;DR
+
+- Use the `NextPage`, `GetStaticProps` and `GetStaticPaths` types provided by Next.js
+- Provide generic types to `NextPage`, `GetStaticProps` and `GetStaticPaths`
+  to add additional type safety for `props` and `paths`
+
+## GetStaticProps and GetStaticPaths types
+
+For pages, Next.js provides the `NextPage` type. You can pass the type of
+props the page expect, as a generic.
+
+For [static generation and server-side rendering](https://nextjs.org/docs/basic-features/typescript#static-generation-and-server-side-rendering),
+Next.js provides the types `GetStaticProps`, `GetStaticPaths`, `GetServerSideProps`.
+
+This following example demonstrate how to display the details (humm humm just the name actually) of a few Star Wars characters:
+
+```typescript
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import React from 'react';
+
+interface Person {
+  name: string;
+}
+
+interface StarWarsPersonProps {
+  person: Person;
+}
+
+const StarWarsPerson: NextPage<StarWarsPersonProps> = ({ person }) => {
+  return <div>{person.name}</div>;
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { pid } = context.params;
+
+  const res = await fetch(`https://swapi.dev/api/people/${pid}`);
+
+  const person = (await res.json()) as Person;
+
+  return {
+    props: {
+      person,
+    },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = Array.from({ length: 10 }, (_, index) => ({
+    params: {
+      pid: (index + 1).toString(),
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export default StarWarsPerson;
+```
+
+Notice how we get type safety out of the box, using the types `GetStaticProps` and `GetStaticPath`:
+
+- `getStaticProps` has to return an object with a `props` property
+- `getStaticPaths` has to return an object with a `paths` property.
+
+Some points of interest:
+
+- `getStaticPaths` returns the list of of possible `pid` to generate the page for
+- `getStaticProps` expects a param `pid` and fetches the Person for the `pid`
+- The `StarWarsPerson` component itself expects a `person: Person` prop
+
+## Adding type safety to the param
+
+Notice a potential for improvement here? The whole flow relies on `pid` param.
+If I were to write this code, TypesScript would not complain:
+
+```typescript {diff}
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = Array.from({ length: 10 }, (_, index) => ({
+    params: {
+-      pid: (index + 1).toString(),
++      pid2: (index + 1).toString(),
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+```
+
+How can we improve the type safety?
+
+### GetStaticProps type definition
+
+Let's take a look at the `GetStaticProps` type definition:
+
+```typescript
+export type GetStaticPropsContext<Q extends ParsedUrlQuery = ParsedUrlQuery> = {
+  params?: Q;
+  preview?: boolean;
+  previewData?: PreviewData;
+  locale?: string;
+  locales?: string[];
+  defaultLocale?: string;
+};
+
+export type GetStaticPropsResult<P> =
+  | { props: P; revalidate?: number | boolean }
+  | { redirect: Redirect; revalidate?: number | boolean }
+  | { notFound: true };
+
+export type GetStaticProps<
+  P extends { [key: string]: any } = { [key: string]: any },
+  Q extends ParsedUrlQuery = ParsedUrlQuery
+> = (
+  context: GetStaticPropsContext<Q>
+) => Promise<GetStaticPropsResult<P>> | GetStaticPropsResult<P>;
+```
+
+The type is providing additional type safety features with the use of generics :)
+
+- The generic `P` is the type of props expected to be returned
+- The generic `Q` is the type of params expected to be received as input
+
+### GetStaticPaths type definition
+
+Simimlarly `GetStaticPaths` provides more type safety with generics:
+
+```typescript
+export type GetStaticPathsContext = {
+  locales?: string[];
+  defaultLocale?: string;
+};
+
+export type GetStaticPathsResult<P extends ParsedUrlQuery = ParsedUrlQuery> = {
+  paths: Array<string | { params: P; locale?: string }>;
+  fallback: boolean | 'blocking';
+};
+
+export type GetStaticPaths<P extends ParsedUrlQuery = ParsedUrlQuery> = (
+  context: GetStaticPathsContext
+) => Promise<GetStaticPathsResult<P>> | GetStaticPathsResult<P>;
+```
+
+In this case, only one generic is specified.  
+`P` is the type of `params` expected to be returned in the`paths` property.
+
+### Solution
+
+With this new knowledge, let's add a new interface `Params` to provide
+additional type safety to both `GetStaticProps` and `GetStaticPaths`.
+
+We can also enforce type safety on the returned props by `GetStaticProps`
+by using the `StarWarsPersonProps` interface.
+
+```typescript {numberLines}
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { ParsedUrlQuery } from 'querystring';
+import React from 'react';
+
+interface Person {
+  name: string;
+}
+
+interface StarWarsPersonProps {
+  person: Person;
+}
+
+const StarWarsPerson: NextPage<StarWarsPersonProps> = ({ person }) => {
+  return <div>{person.name}</div>;
+};
+
+interface Params extends ParsedUrlQuery {
+  pid: string;
+}
+
+export const getStaticProps: GetStaticProps<StarWarsPersonProps, Params> =
+  async (context) => {
+    const { pid } = context.params!;
+
+    const res = await fetch(`https://swapi.dev/api/people/${pid}`);
+
+    const person = (await res.json()) as Person;
+
+    return {
+      props: {
+        person,
+      },
+    };
+  };
+
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
+  const paths = Array.from({ length: 10 }, (_, index) => ({
+    params: {
+      pid: (index + 1).toString(),
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export default StarWarsPerson;
+```
+
+Note that at line 23 we had to use the `!` TypeScript
+[non-null assertion operator](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator)
+in order to avoid the error "Property does not exist on type Params | undefined".
