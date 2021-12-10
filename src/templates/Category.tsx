@@ -66,6 +66,7 @@ export const pageQuery = graphql`
     }
     allBlogPost(
       filter: { categorySlug: { eq: $slug }, publishedDate: { ne: null } }
+      sort: { fields: publishedDate, order: DESC }
     ) {
       nodes {
         authors {

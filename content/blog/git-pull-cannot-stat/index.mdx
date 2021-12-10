@@ -1,0 +1,22 @@
+---
+title: 'How to fix cannot stat permission denied error upon git pull'
+slug: 'git-pull-cannot-stat'
+description: 'Learn how to fix the error: cannot stat, when doing a git pull '
+publishedDate: '2021-12-10'
+category: 'devops'
+tags:
+  - 'devops'
+  - 'git'
+authors:
+  - 'benoit.paul@gmail.com'
+---
+
+You might encounter the following error after running `git pull`:
+
+```bash
+error: cannot stat 'path/file': Permission denied
+```
+
+The error is probably because an editor or a terminal locking the file.
+
+To fix the `cannot stat` error, **you need to close the editor and terminal**. Running `git pull` again will work fine after that.
